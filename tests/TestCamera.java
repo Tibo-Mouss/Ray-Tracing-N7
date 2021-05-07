@@ -7,26 +7,32 @@ import java.awt.Color;
 import utilitaire .*;
 import rayTracing .*;
 
+/** @author tibo */
+
 public class TestCamera {
 
 	// précision pour les comparaisons entre reels
 	public final static double EPSILON = 0.001;
 	
-	private Point centrecam;
-	private Vecteur vecteurCameraEcran, VHaut;
+	private Point centrecam1, centrecam2;
+	private Vecteur vecteurCameraEcran1, VHaut1, vecteurCameraEcran2, VHaut2;
 	private int pixelHauteur, pixelLongueur;
 	
 	
 	@Before public void setUp() {
-		centrecam = new Point(-1,0,0);
-		vecteurCameraEcran = new Vecteur(1,0,0);
+		centrecam1 = new Point(-1,0,0);
+		vecteurCameraEcran1 = new Vecteur(1,0,0);
 		pixelHauteur = 10;
 		pixelLongueur = 20;
-		VHaut = new Vecteur(0,0,1);
+		VHaut1 = new Vecteur(0,0,1);
+		
+		centrecam2 = new Point(-1,-1,0);
+		vecteurCameraEcran2 = new Vecteur(1,1,0);
+		VHaut2 = new Vecteur(0,0,1);
 	}
 	
 	@Test public void testConstructeur() {
-		Camera cam = new Camera(centrecam, vecteurCameraEcran, pixelHauteur, pixelLongueur, VHaut);
+		Camera cam = new Camera(centrecam1, vecteurCameraEcran1, pixelHauteur, pixelLongueur, VHaut1);
 		/*
 		cam.printVecteursIterateurs();
 		cam.printCoins();
@@ -44,8 +50,14 @@ public class TestCamera {
 		assertEquals("Ordonnee Pixel HG fausse",cam.getPixel(pixelHauteur-1, pixelLongueur-1).getCoordonnee().getZ(),-0.9,EPSILON);
 		
 		assertEquals("Focale fausse", cam.getFocale(),1, EPSILON);
-		
-		
-		cam.setPixel(0, 0, Color.RED);
 	}
+	
+	@Test public void testConstructeur2() {
+		Camera cam = new Camera(centrecam2, vecteurCameraEcran2, pixelHauteur, pixelLongueur, VHaut2);
+		
+		cam.printCoinsImage();
+		cam.printCoinsFenetre();
+		cam.printVecteursIterateurs();
+	}
+	
 }
