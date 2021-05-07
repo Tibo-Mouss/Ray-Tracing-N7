@@ -175,7 +175,7 @@ public class Camera {
 		this.vecteurItH.retirerProjection(this.vecteurCameraEcran);
 		
 		//On enleve la composante sur l'axe Vhaut :
-		this.vecteurItH.retirerProjection(this.VHaut);
+		this.vecteurItH.retirerProjection(this.vecteurItV);
 		
 		//La on ajuste sa taille. On veut que le vecteurItH soit de meme module que VecteurItV
 		this.vecteurItH = this.vecteurItH.multiplication( this.vecteurItV.module() / this.vecteurItH.module() );
