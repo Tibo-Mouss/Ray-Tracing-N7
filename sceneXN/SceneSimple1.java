@@ -22,7 +22,7 @@ public class SceneSimple1 {
 		scene.setCouleur(Color.WHITE);
 		
 			// Ajout d'un cube
-		Sphere cube = new Sphere(new Point(0,0,0), 4, "Cube");
+		Cube cube = new Cube(new Point(0,0,0), 4, "Cube");
 	    Couleur couleur = (Couleur)cube.getMateriau(0);
 		couleur.set(255, 0, 0);
 		try {
