@@ -8,6 +8,8 @@ import utilitaire .*;
 import rayTracing .*;
 import elements3D .*;
 
+/** @author tibo */
+
 public class TestCube {
 	// précision pour les comparaisons entre reels
 	public final static double EPSILON = 0.001;
