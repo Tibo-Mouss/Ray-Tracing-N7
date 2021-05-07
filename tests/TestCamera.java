@@ -26,8 +26,8 @@ public class TestCamera {
 		pixelLongueur = 20;
 		VHaut1 = new Vecteur(0,0,1);
 		
-		centrecam2 = new Point(-1,0,0);
-		vecteurCameraEcran2 = new Vecteur(1,0,0);
+		centrecam2 = new Point(-1,-1,0);
+		vecteurCameraEcran2 = new Vecteur(1,1,0);
 		VHaut2 = new Vecteur(0,0,1);
 	}
 	
@@ -55,6 +55,9 @@ public class TestCamera {
 	@Test public void testConstructeur2() {
 		Camera cam = new Camera(centrecam2, vecteurCameraEcran2, pixelHauteur, pixelLongueur, VHaut2);
 		
+		cam.printCoinsImage();
+		cam.printCoinsFenetre();
+		cam.printVecteursIterateurs();
 	}
 	
 }
