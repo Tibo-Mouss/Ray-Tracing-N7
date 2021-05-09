@@ -200,6 +200,17 @@ public class Plan implements Objet3D, Serializable {
 	public void rotation(double rx, double ry, double rz) {
 		this.normale.rotationXYZ(rx,ry,rz);
 	}
+	
+	/**Effectue une rotation autour d'un axe donne en entree
+	 * @param rx : premiere roation effectuee
+	 * @param ry : deuxieme roation effectuee
+	 * @param rz : troisieme roation effectuee
+	 */
+	public void rotation(double rx, double ry, double rz, Vecteur AxeX, Vecteur AxeY, Vecteur AxeZ) {
+		this.normale.rotationAxe(AxeX, rx);
+		this.normale.rotationAxe(AxeY, ry);
+		this.normale.rotationAxe(AxeZ, rz);
+	}
 
 	/**
 	 * Attribut un nom au plan

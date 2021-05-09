@@ -12,12 +12,12 @@ import java.io.Serializable;
 import rayTracing.Lumiere;
 
 /**
- * Classe permettant d'utiliser / manipuler un Cube pour le raytracing
+ * Classe permettant d'utiliser / manipuler un Pave pour le raytracing
  * @author tibo, en partenariat avec ses erreurs de programmation
  *
  */
 
-public class Cube implements Objet3D, Serializable {
+public class Pave implements Objet3D, Serializable {
 	
 	private static final long serialVersionUID = 5907153455163217165L;
 	private static int compteur = 0; // compteur pour les noms par défaut
@@ -32,7 +32,10 @@ public class Cube implements Objet3D, Serializable {
 	private Point centre;
 	
 	/** Arete du cube */
-	private double arete;
+	private double areteX;
+	private double areteY;
+	private double areteZ;
+	
 	
 	/** Axes propres du cube */
 	private Vecteur X;
@@ -43,11 +46,13 @@ public class Cube implements Objet3D, Serializable {
 	 * Toutes les normales sont dirigees vers l'exterieur du cube */
 	private ArrayList<Plan> plans;
 
-	public Cube(Point centre, double arete , String nom) {
+	public Pave(Point centre, double areteX, double areteY, double areteZ, String nom) {
 		this.properties = new Properties();
 		this.nom = nom;
 		
-		this.arete = arete;
+		this.areteX = areteX;
+		this.areteY = areteY;
+		this.areteZ = areteZ;
 		this.centre = centre.copie();
 		
 		X = new Vecteur(1, 0, 0);
@@ -58,33 +63,33 @@ public class Cube implements Objet3D, Serializable {
 		Point point;
 		this.plans = new ArrayList<Plan>();
 		
-		point = new Point(this.centre.getX() + this.arete/2, this.centre.getY(), this.centre.getZ());
+		point = new Point(this.centre.getX() + this.areteX/2, this.centre.getY(), this.centre.getZ());
 		plan = new Plan(new Vecteur(1,0,0), point, "0", this.properties);
 		plans.add(plan.copie());
 		
-		point = new Point(this.centre.getX() - this.arete/2, this.centre.getY(), this.centre.getZ());
+		point = new Point(this.centre.getX() - this.areteX/2, this.centre.getY(), this.centre.getZ());
 		plan = new Plan(new Vecteur(-1,0,0), point, "1", this.properties);
 		plans.add(plan.copie());
 		
-		point = new Point(this.centre.getX(), this.centre.getY() + this.arete/2, this.centre.getZ());
+		point = new Point(this.centre.getX(), this.centre.getY() + this.areteY/2, this.centre.getZ());
 		plan = new Plan(new Vecteur(0,1,0), point, "2", this.properties);
 		plans.add(plan.copie());
 		
-		point = new Point(this.centre.getX(), this.centre.getY() - this.arete/2, this.centre.getZ());
+		point = new Point(this.centre.getX(), this.centre.getY() - this.areteY/2, this.centre.getZ());
 		plan = new Plan(new Vecteur(0,-1,0), point, "3", this.properties);
 		plans.add(plan.copie());
 		
-		point = new Point(this.centre.getX(), this.centre.getY(), this.centre.getZ() + this.arete/2);
+		point = new Point(this.centre.getX(), this.centre.getY(), this.centre.getZ() + this.areteZ/2);
 		plan = new Plan(new Vecteur(0,0,1), point, "4", this.properties);
 		plans.add(plan.copie());
 		
-		point = new Point(this.centre.getX(), this.centre.getY(), this.centre.getZ() - this.arete/2);
+		point = new Point(this.centre.getX(), this.centre.getY(), this.centre.getZ() - this.areteZ/2);
 		plan = new Plan(new Vecteur(0,0,-1), point, "5", this.properties);
 		plans.add(plan.copie());
 	}
 	
-	public Cube(Point centre, double arete) {
-		this(centre, arete, "Cube" + ++compteur);
+	public Pave(Point centre, double areteX, double areteY, double areteZ) {
+		this(centre, areteX, areteY, areteZ, "Cube" + ++compteur);
 	}
 	
 	//----------------------------------------------------------------------
@@ -109,11 +114,11 @@ public class Cube implements Objet3D, Serializable {
 	@Override
 	public Vecteur getNormal(Point impact, Rayon rayon) {
 		assert impact != null && rayon != null;
-		int indice = appartientCube(impact);
+		int indice = appartientPave(impact);
 		
 		//Assert pt d'impact appartient au cube
 		if (indice == -1) {
-			System.out.println("getNormal : Le point n'appartient pas au cube");
+			System.out.println("getNormal : Le point n'appartient pas au pave");
 			return null;
 		}
 		
@@ -132,11 +137,11 @@ public class Cube implements Objet3D, Serializable {
 	@Override
 	public boolean getSelfOmbre(Point impact, Rayon rayon, Lumiere lumiere) {
 		assert impact != null && rayon != null && lumiere != null;
-		int indice = appartientCube(impact);
+		int indice = appartientPave(impact);
 		
 		//Assert pt d'impact appartient au cube
 		if (indice == -1) {
-			System.out.println("getSelfOmbre : Le point n'appartient pas au cube");
+			System.out.println("getSelfOmbre : Le point n'appartient pas au pave");
 			return false;
 		}
 		
@@ -148,7 +153,7 @@ public class Cube implements Objet3D, Serializable {
 	//Autres methodes
 
 	/**
-	 * Determine si le cube est traverse par un rayon et son premier point d'impact
+	 * Determine si le pave est traverse par un rayon et son premier point d'impact
 	 * (il y en aura presque toujours deux)
 	 * @param r : rayon
 	 */
@@ -162,7 +167,7 @@ public class Cube implements Objet3D, Serializable {
 		
 		for (i = 0; i<6; i++) {
 			point = this.plans.get(i).estTraversePar(r);
-			indice = this.appartientCube(point);
+			indice = this.appartientPave(point);
 			
 			if (point != null & indice != -1) {
 				if ((distanceMin > point.distance(r.getOrigine()) | distanceMin < Objet3D.EPSILON) ) {
@@ -175,14 +180,14 @@ public class Cube implements Objet3D, Serializable {
 		return pointReturn;
 	}
 
-	/** Determine la direction et sens du rayon reflechi contre le cube au point d'impact p
+	/** Determine la direction et sens du rayon reflechi contre le pave au point d'impact p
 	 * @param r : rayon allant frapper le cube
 	 * @param p : point où a lieu la collision
 	 */
 	@Override
 	public Vecteur directionReflexion(Rayon r, Point p) {
 		assert r != null && p != null;
-		int indice = appartientCube(p);
+		int indice = appartientPave(p);
 		
 		//Assert pt d'impact appartient au cube
 		if (indice == -1) {
@@ -193,7 +198,7 @@ public class Cube implements Objet3D, Serializable {
 		return this.plans.get(indice).directionReflexion(r, p);
 	}
 
-	/**Translate le cube de dx, dy, dz
+	/**Translate le pave de dx, dy, dz
 	 * @param dx,dy,dz : De combien sur chaque axe le plan va etre translate
 	 */
 	@Override
@@ -232,7 +237,7 @@ public class Cube implements Objet3D, Serializable {
 	}
 
 	/**
-	 * Attribut un nom au cube
+	 * Attribut un nom au pave
 	 * @param nom : mon instinct me dit que ce parametre designe le nom de l'objet
 	 */
 	@Override
@@ -243,11 +248,11 @@ public class Cube implements Objet3D, Serializable {
 	/**
 	 * @param point : point d'impact
 	 * @return Renvoie l'indice du plan correspondant
-	 *  			Si le point n'appartient pas au cube --> renvoie -1
+	 *  			Si le point n'appartient pas au pave --> renvoie -1
 	 * 				Si le point appartient à une arete/coin --> renvoie un plan au hasard
 	 * 					entre ceux qu'il touche
 	 */
-	public int appartientCube(Point point) {
+	public int appartientPave(Point point) {
 		int i;
 		Vecteur relatifPointPlan;
 		double produitScalaire;
@@ -271,11 +276,11 @@ public class Cube implements Objet3D, Serializable {
 				
 				//Check si il appartient au segment [-arete ; arete] sur chaque coordonnee
 				if ( 	(vecteurDeTest.getX() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getX()) < this.arete/2 ) &
+							Math.abs(relatifPointPlan.getX()) < this.areteX/2 ) &
 						(vecteurDeTest.getY() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getY()) < this.arete/2 ) &
+							Math.abs(relatifPointPlan.getY()) < this.areteY/2 ) &
 						(vecteurDeTest.getZ() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getZ()) < this.arete/2 ) ) {
+							Math.abs(relatifPointPlan.getZ()) < this.areteZ/2 ) ) {
 					return i;
 				}
 				
