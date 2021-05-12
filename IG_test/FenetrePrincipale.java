@@ -23,18 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import IG.EnregistrerImage;
-import IG.EnregistrerScene;
-import IG.FenetreLumiere;
-import IG.ListeLumieres;
-import IG.ListeObjets;
-import IG.Lumieres;
-import IG.Objet;
-import IG.FenetrePrincipale.ActionAjouterLumiere;
-import IG.FenetrePrincipale.ActionAjouterObjet;
-import IG.FenetrePrincipale.ActionEnregistrerI;
-import IG.FenetrePrincipale.ActionEnregistrerS;
-import IG.FenetrePrincipale.ActionOuvrirLumiere;
+
 import elements3D.Sphere;
 import rayTracing.RayTracing;
 import utilitaire.Point;
@@ -137,7 +126,7 @@ public class FenetrePrincipale {
 		
 		frame.getContentPane().setLayout(null);
 		
-		JButton ajouterObjet = new JButton("",new ImageIcon("C:\\Users\\rapha\\Desktop\\COURS 1A\\Projet TOB\\branches\\Exceptions\\IG_test\\objet.png"));
+		JButton ajouterObjet = new JButton("",new ImageIcon("IG_test/objet.png"));
 		ajouterObjet.setBackground(new Color(0, 139, 139));
 		ajouterObjet.setForeground(new Color(0, 0, 0));
 		ajouterObjet.addActionListener(new ActionAjouterObjet());
@@ -148,7 +137,7 @@ public class FenetrePrincipale {
 		JButton ajouterLumiere = new JButton("");
 		ajouterLumiere.setBackground(new Color(0, 128, 128));
 		ajouterLumiere.addActionListener(new ActionAjouterLumiere());
-		ajouterLumiere.setIcon(new ImageIcon("C:\\Users\\rapha\\Desktop\\COURS 1A\\Projet TOB\\branches\\Exceptions\\IG_test\\lumiere.png"));
+		ajouterLumiere.setIcon(new ImageIcon("IG_test/lumiere.png"));
 		ajouterLumiere.setBounds(89, 11, 70, 73);
 		frame.getContentPane().add(ajouterLumiere);
 		
@@ -204,7 +193,7 @@ public class FenetrePrincipale {
 		listLumieres.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		
 		JButton plusLumieres = new JButton("+");
-	   	plusLumieres.addActionListener(new ActionAjouterObjet());
+	   	plusLumieres.addActionListener(new ActionAjouterLumiere());
 		plusLumieres.setBackground(new Color(0, 128, 128));
 		plusLumieres.setBounds(166, 180, 41, 42);
 		panel_1.add(plusLumieres);
@@ -229,6 +218,7 @@ public class FenetrePrincipale {
 		panel_1.add(btnParametre);
 		
 		JButton btnAnnuler = new JButton("Annuler");
+		btnAnnuler.addActionListener(new ActionQuitter());
 		btnAnnuler.setBackground(new Color(0, 128, 128));
 		btnAnnuler.setBounds(974, 584, 89, 23);
 		frame.getContentPane().add(btnAnnuler);
@@ -256,11 +246,11 @@ public class FenetrePrincipale {
 	public class ActionOuvrirLumiere extends MouseAdapter {
 		public void mouseClicked(MouseEvent evt) {
 	        if (evt.getClickCount() == 2) {
-				//FenetreLumiere lux = new FenetreLumiere("Lumière", rayTracing,listeL,listLumieres);
-				//lux.setVisible(true);
+				FenetreLumiere lux = new FenetreLumiere(rayTracing,listeL,listLumieres);
+				lux.setVisible(true);
 	        } else if (evt.getClickCount() == 3) {
-				//FenetreLumiere lux = new FenetreLumiere("Lumière", rayTracing,listeL,listLumieres);
-				//lux.setVisible(true);
+				FenetreLumiere lux = new FenetreLumiere(rayTracing,listeL,listLumieres);
+				lux.setVisible(true);
 	        }
 		}
 	}
@@ -268,11 +258,11 @@ public class FenetrePrincipale {
 	public class ActionOuvrirObjet extends MouseAdapter {
 		public void mouseClicked(MouseEvent evt) {
 	        if (evt.getClickCount() == 2) {
-				//FenetreLumiere lux = new FenetreLumiere("Lumière", rayTracing,listeL,grilleL);
-				//lux.setVisible(true);
+				FenetreObjet objet = new FenetreObjet(rayTracing,listeO,listObjets);
+				objet.setVisible(true);
 	        } else if (evt.getClickCount() == 3) {
-				//FenetreLumiere lux = new FenetreLumiere("Lumière", rayTracing,listeL,grilleL);
-				//lux.setVisible(true);
+				FenetreObjet objet = new FenetreObjet(rayTracing,listeO,listObjets);
+				objet.setVisible(true);
 	        }
 		}
 	}
@@ -306,16 +296,15 @@ public class FenetrePrincipale {
 	
 	public class ActionAjouterObjet implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
-		    Sphere sphere_test = new Sphere(new Point(0,5,10), 1, "SphereTest");
-			//rayTracing.getScene().addObjet3D(sphere_test);
-			//ajouterObjet(new Objet(sphere_test));
+			FenetreObjet objet = new FenetreObjet(rayTracing,listeO,listObjets);
+			objet.setVisible(true);
 		}
 	}
 	
 	public class ActionAjouterLumiere implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
-			//FenetreLumiere lux = new FenetreLumiere("Lumière", rayTracing,listeL,listLumieres);
-			//lux.setVisible(true);
+			FenetreLumiere lux = new FenetreLumiere(rayTracing,listeL,listLumieres);
+			lux.setVisible(true);
 		}
 	}
 	
@@ -323,6 +312,12 @@ public class FenetrePrincipale {
 		public void actionPerformed(ActionEvent ev) {
 			Parametrage parametre = new Parametrage();
 			parametre.setVisible(true);
+		}
+	}
+	
+	public class ActionQuitter implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			System.exit(0);
 		}
 	}
 }

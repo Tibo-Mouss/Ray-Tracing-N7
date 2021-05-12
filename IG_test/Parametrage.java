@@ -2,9 +2,12 @@ package IG_test;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JSpinner;
@@ -13,7 +16,7 @@ import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
 
-public class Parametrage extends JDialog {
+public class Parametrage extends JFrame{
 
 	private final JPanel contentPanel = new JPanel();
 	private JSpinner nbRebond;
@@ -26,7 +29,6 @@ public class Parametrage extends JDialog {
 	public static void main(String[] args) {
 		try {
 			Parametrage dialog = new Parametrage();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -37,7 +39,8 @@ public class Parametrage extends JDialog {
 	 * Create the dialog.
 	 */
 	public Parametrage() {
-		setBounds(100, 100, 372, 179);
+		setBounds(100, 100, 372, 179);			
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -65,30 +68,40 @@ public class Parametrage extends JDialog {
 		activerMthodeShadding.setMnemonic('O');
 		activerMthodeShadding.setBounds(52, 60, 200, 23);
 		contentPanel.add(activerMthodeShadding);
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Fermer");
-				cancelButton.setActionCommand("Fermer");
-				buttonPane.add(cancelButton);
-			}
-		}
+		
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		
+		JButton okButton = new JButton("OK");
+		okButton.addActionListener(new ActionModifier());
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+		
+		JButton cancelButton = new JButton("Fermer");
+		cancelButton.addActionListener(new ActionQuitter());
+		buttonPane.add(cancelButton);
+		
 	}
-	protected JSpinner getNbRebond() {
+	public JSpinner getNbRebond() {
 		return nbRebond;
 	}
-	protected JCheckBox getActiveOmbres() {
+	public JCheckBox getActiveOmbres() {
 		return activeOmbres;
 	}
-	protected JCheckBox getActiverMthodeShadding() {
+	public JCheckBox getActiverMthodeShadding() {
 		return activerMthodeShadding;
+	}
+	
+	public class ActionQuitter implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			dispose();
+		}
+	}
+	
+	public class ActionModifier implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			dispose();
+		}
 	}
 }
