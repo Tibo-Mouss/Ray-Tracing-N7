@@ -124,10 +124,10 @@ public class Plan implements Objet3D, Serializable {
 	
 	
 	//----------------------------------------------------------------------
-	//Autres m�thodes
+	//Autres methodes
 
 	/** http://nguyen.univ-tln.fr/share/Infographie3D/trans_raytracing.pdf
-	 * D�termine sir le plan est traverse par un rayon
+	 * Determine sir le plan est traverse par un rayon
 	 * @param r : rayon
 	 */
 	@Override
@@ -178,9 +178,9 @@ public class Plan implements Objet3D, Serializable {
 		Vecteur projection = new Vecteur(r.getDirection().getX(),r.getDirection().getY(),r.getDirection().getZ());
 		projection.retirerProjection(this.normale);
 		
-		Vecteur dir_reflexion = r.getDirection().soustraire(projection.multiplication(2));
-		dir_reflexion = dir_reflexion.soustraire(dir_reflexion.multiplication(2));
-		return dir_reflexion;
+		Vecteur dirReflexion = r.getDirection().soustraire(projection.multiplication(2));
+		dirReflexion = dirReflexion.soustraire(dirReflexion.multiplication(2));
+		return dirReflexion;
 	}
 
 	/**Translate le plan de dx, dy, dz
