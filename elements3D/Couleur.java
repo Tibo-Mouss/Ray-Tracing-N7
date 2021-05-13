@@ -122,7 +122,6 @@ public class Couleur implements Propriete, Serializable {
 
 	@Override
 	public double getEnergie() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
