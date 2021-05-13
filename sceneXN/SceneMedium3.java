@@ -22,6 +22,7 @@ import utilitaire.Vecteur;
 public class SceneMedium3 {
 	public static void main(String args[]) {
 		
+	try {
 		// Création de la scène
 	    Scene scene = new Scene(300);
 	    scene.setCouleur(Color.white);
@@ -88,5 +89,8 @@ public class SceneMedium3 {
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
 		camera.sauvegarderImage(img, "test3bis");
+	} catch (Exception e) {
+		System.out.println("Erreur dans la gestion de la scène.");
+	}
 	}
 }

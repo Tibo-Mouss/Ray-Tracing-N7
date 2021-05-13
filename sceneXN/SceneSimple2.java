@@ -1,6 +1,8 @@
 package sceneXN;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+
 import rayTracing .*;
 
 import elements3D.Couleur;
@@ -12,6 +14,7 @@ import utilitaire.Vecteur;
 public class SceneSimple2 {
 
 	public static void main(String args[]) {
+		try {
 		Scene scene = new Scene(300);
 		//Creation camera:
 		Point centreCamera = new Point(-5,0,0);
@@ -42,7 +45,13 @@ public class SceneSimple2 {
 		
 		RayTracing raytracing = new RayTracing(scene, camera, 1, true, false);
 		raytracing.lancerRayTracing();
-		camera.sauvegarderImage("test_simple2");
+		// Enregistrement de l'image
+		BufferedImage img = camera.creerImage();
+		camera.sauvegarderImage(img, "test_simple3");
 		System.out.println("Traitement d'image fini !");
+		
+	} catch (Exception e) {
+		System.out.println("Mauvaise gestion");
+	}
 	}
 }
