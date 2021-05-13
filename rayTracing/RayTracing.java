@@ -26,7 +26,7 @@ public class RayTracing {
 	/** Nombre maximum de rebonds que peut faire un rayon*/
 	private int maxRebond;
 	
-	/** Indique si l'on représente les ombres pour le rendu.*/
+	/** Indique si l'on reprÃ©sente les ombres pour le rendu.*/
 	private boolean ombreIsOn;
 	
 	/** Indique si l'on utilise la technique de shadding pour le rendu.*/
@@ -53,31 +53,41 @@ public class RayTracing {
 		this.shaddingisOn = shadding;
 	}
 	/**
-	 * Obtenir la scène.
-	 * @return Scène sur laquelle le Ray Tracing opère.
+	 * Obtenir la scÃ¨ne.
+	 * @return ScÃ¨ne sur laquelle le Ray Tracing opÃ¨re.
 	 */
 	public Scene getScene() {
 		return this.scene;
 	}
 	
 	/**
-	 * Obtenir la camère.
-	 * @return Caméra avec laquelle Ray Tracing opère.
+	 * Obtenir la camÃ¨re.
+	 * @return CamÃ©ra avec laquelle Ray Tracing opÃ¨re.
 	 */
 	public Camera getCamera() {
 		return this.camera;
 	}
 	
-	/** Obtenir la couleur finale d'un pixel à partir de ses rayons fils.
+	/** Obtenir la couleur finale d'un pixel Ã  partir de ses rayons fils.
 	 * @param listeRayonsFinaux la liste des rayons fils finaux
 	 * @return la couleur finale du pixel
 	 */
 	private static Color getCouleurFinale(ArrayList <Rayon> listeRayonsFinaux) {
-		return listeRayonsFinaux.get(0).getCouleur(); //seulement pour itération 1 car peu de Properties
+		Color couleurFinale = Color.black;
+		double pE;
+		double r, g, b;
+		for (rayon in listeRayonsFinaux) {
+			pE = rayon.getPartEnergie;
+			r = Math.max(couleurFinale.getRed(), pE * rayon.getCouleur().getRed());
+			g = Math.max(couleurFinale.getGreen(), pE * rayon.getCouleur().getGreen());
+			b = Math.max(couleurFinale.getBlue(), pE * rayon.getCouleur().getBlue());
+			couleurFinale = new Color((int)r,(int)g,(int)b);
+		}
+		return couleurFinale;
 	}
 	
 	
-	/** Modifier la couleur d'un rayon fils par rapport à sa couleur et à la couleur de son père.
+	/** Modifier la couleur d'un rayon fils par rapport Ã  sa couleur et Ã  la couleur de son pÃ¨re.
 	 * @param rayon le rayon dont on veut modifier la couleur
 	 * @param couleur la couleur du rayon
 	*/
@@ -95,17 +105,17 @@ public class RayTracing {
 	 * Lance le calcul du rendu en utilisant la technique de ray tracing.
 	 */
 	public void lancerRayTracing() {
-		int pixelHauteur = this.camera.getPixelHauteur(); //le nombre de pixels sur la hauteur de l'écran
-		int pixelLongueur = this.camera.getPixelLongueur(); //le nombre de pixels sur la largeur de l'écran
+		int pixelHauteur = this.camera.getPixelHauteur(); //le nombre de pixels sur la hauteur de l'Ã©cran
+		int pixelLongueur = this.camera.getPixelLongueur(); //le nombre de pixels sur la largeur de l'Ã©cran
 		
 		//  Constantes de la boucle
 		Pixel pixelCourant; //pixel dont on calcule la couleur
-		Rayon rayonCourant; //rayon père que l'on envoie à partir du pixel père pixelCourant
+		Rayon rayonCourant; //rayon pÃ¨re que l'on envoie Ã  partir du pixel pÃ¨re pixelCourant
 		Color couleurCourante; //couleur du pixel pixelCourant
-		ArrayList<Rayon> listeRayonsFinaux; //liste des rayons fils finaux lancés à partir de pixelCourant
-																			//Peut-être changer la collection
+		ArrayList<Rayon> listeRayonsFinaux; //liste des rayons fils finaux lancÃ©s Ã  partir de pixelCourant
+																			//Peut-Ãªtre changer la collection
 		
-		// Parcours de tous les pixels de l'écran
+		// Parcours de tous les pixels de l'Ã©cran
 		for (int i=0; i < pixelHauteur; i++) {
 			for (int j=0; j <pixelLongueur; j++) {
 				
@@ -113,15 +123,15 @@ public class RayTracing {
 				
 				pixelCourant = camera.getPixel(i,j);
 				rayonCourant = new Rayon(camera.getCentre(), pixelCourant.getCoordonnee(), pixelCourant);
-				rayonCourant.setCouleur(255, 255, 255); // on initialise la couleur du rayon à BLANC
+				rayonCourant.setCouleur(255, 255, 255); // on initialise la couleur du rayon Ã  BLANC
 				
 				//lancement du rayon, ie recherche d'une intersection avec un objet
 				this.lancerRayon(rayonCourant,0,listeRayonsFinaux);
 				
-				//calcul de la couleur finale à partir des rayons fils
-				couleurCourante = getCouleurFinale(listeRayonsFinaux); // à faire
+				//calcul de la couleur finale Ã  partir des rayons fils
+				couleurCourante = getCouleurFinale(listeRayonsFinaux); // Ã  faire
 
-				//mise à jour de la couleur du pixel
+				//mise Ã  jour de la couleur du pixel
 				pixelCourant.setCouleur(couleurCourante);
 			}
 		}
@@ -129,8 +139,8 @@ public class RayTracing {
 	
 	/** Lancer un rayon, ie recherche d'une intersection avec un objet.
 	 * @param rayon
-	 * @param compteur le nombre de rebond déjà effectués par rayon
-	 * @param listeRayonsFinaux liste des rayons finaux associés au pixel père de rayon
+	 * @param compteur le nombre de rebond dÃ©jÃ  effectuÃ©s par rayon
+	 * @param listeRayonsFinaux liste des rayons finaux associÃ©s au pixel pÃ¨re de rayon
 	 */
 	private void lancerRayon(Rayon rayon, int compteur, ArrayList <Rayon> listeRayonsFinaux) {
 
@@ -155,9 +165,9 @@ public class RayTracing {
 			objetCourant = this.scene.getObjet3D().get(k);
 			intersectionCourante = objetCourant.estTraversePar(rayon);
 			
-			// On détermine si l'objet est plus proche de l'origine du rayon
+			// On dÃ©termine si l'objet est plus proche de l'origine du rayon
 			if (intersectionCourante != null) {
-				distanceCourante = intersectionCourante.distance(rayon.getOrigine()); //distance à ajouter dans Point
+				distanceCourante = intersectionCourante.distance(rayon.getOrigine()); //distance Ã  ajouter dans Point
 				if (distanceCourante < distanceMin) {
 					objetIntersection = objetCourant;
 					intersection = intersectionCourante;
@@ -172,10 +182,10 @@ public class RayTracing {
 			Couleur couleurObjetInt = (Couleur)objetIntersection.getMateriau(0);
 			Color couleurOI = new Color(couleurObjetInt.getRed(), couleurObjetInt.getGreen(), couleurObjetInt.getBlue());
 
-			//!\\ ne marche que pour maxRebonds = 0 -> setCouleur à modifier ? ou ajoouter une fonction et un pourcentage
+			//!\\ ne marche que pour maxRebonds = 0 -> setCouleur Ã  modifier ? ou ajoouter une fonction et un pourcentage
 			//ajouter un attribut pourcentage ;  modifier setCouleur() dans Rayon ; dans le constructeur : pourcentage = 1 
 			
-			// Détection de l'ombre
+			// DÃ©tection de l'ombre
 			if (this.ombreIsOn) {
 				Vecteur normal = objetIntersection.getNormal(intersection, rayon);
 				lancerShadowRay(rayon, couleurObjetInt, normal, intersection, objetIntersection);
@@ -183,21 +193,21 @@ public class RayTracing {
 				setCouleurRayon(rayon, couleurOI);	
 			}
 
-			//listeRayonsFinaux.add(rayon); // à modifier après la première itération
+			//listeRayonsFinaux.add(rayon); // Ã  modifier aprÃ¨s la premiÃ¨re itÃ©ration
 			
-			// Lancer des rayons issus de rayon selon les propriétés de l'objet intersecté
+			// Lancer des rayons issus de rayon selon les propriÃ©tÃ©s de l'objet intersectÃ©
 			if (compteur < this.maxRebond) {
 				
 				boolean allOff = true;
 				
-				//Parcours des Materiau, ie propriétés de l'objet intersecté
+				//Parcours des Materiau, ie propriÃ©tÃ©s de l'objet intersectÃ©
 				for (int materiau = 1 ; materiau < Properties.NB_MATERIAUX ; materiau++) {
 					materiauCourant = objetIntersection.getMateriau(materiau);
 					if (materiauCourant.isOn()) {
 						
 						allOff = false;
 						
-						// Lancé du rayon issu de la propriété materiauCourant de l'objet intersecté
+						// LancÃ© du rayon issu de la propriÃ©tÃ© materiauCourant de l'objet intersectÃ©
 						ArrayList<Rayon> listeRayonsMateriau = materiauCourant.creerRayon(rayon, intersection, objetIntersection);
 						for (Rayon rayonFils : listeRayonsMateriau) {
 							lancerRayon(rayonFils, compteur +1, listeRayonsFinaux);
@@ -220,23 +230,23 @@ public class RayTracing {
 	}
 
 	/** 
-	 * Détermination de l'ombre et du shadding.
-	 * @param rayon rayon à partir duquel on lance un shadow ray
-	 * @param couleurIntersection couleur de l'objet intersecté
-	 * @param normal vecteur normal à la surface de l'objet intersecté au point d'impact
-	 * @param intersectionObjet objet intersecté
+	 * DÃ©termination de l'ombre et du shadding.
+	 * @param rayon rayon Ã  partir duquel on lance un shadow ray
+	 * @param couleurIntersection couleur de l'objet intersectÃ©
+	 * @param normal vecteur normal Ã  la surface de l'objet intersectÃ© au point d'impact
+	 * @param intersectionObjet objet intersectÃ©
 	 */
 	private void lancerShadowRay(Rayon rayon, Couleur couleurIntersection, Vecteur normal, Point intersectionObjet, Objet3D objetIntersection) {
 
 		
-		//paramètres de la boucle for
+		//paramÃ¨tres de la boucle for
 		Rayon shadowRay;
 		Color couleurLumiereCourante;
 		Lumiere lumiereCourante;
 		double distanceLumiere;
 		double distanceCourante;
 
-		//paramètres de la boucle while
+		//paramÃ¨tres de la boucle while
 		int objet;
 		boolean ombre;
 		Objet3D objetCourant;
@@ -244,33 +254,33 @@ public class RayTracing {
 		Color couleurCourante = Color.BLACK;
 		Color couleurRayon = rayon.getCouleur();
 
-		//constante de la méthode
+		//constante de la mÃ©thode
 		List<Lumiere> listeLumieres=  this.scene.getLumiere();
 		int nbLumieres = listeLumieres.size();
 		int nbObjets = this.scene.getObjet3D().size();
 		double shadding;
 
-		// On parcourt toutes les lumières
+		// On parcourt toutes les lumiÃ¨res
 		for (int lumiere = 0 ; lumiere < nbLumieres ; lumiere++) {
 			
 			lumiereCourante = listeLumieres.get(lumiere);
 			distanceLumiere = intersectionObjet.distance(lumiereCourante.getCentre());
 			
-			// Création du shadow ray pour la lumière courante
+			// CrÃ©ation du shadow ray pour la lumiÃ¨re courante
 			Vecteur vecteurLumiere = new Vecteur(intersectionObjet, lumiereCourante.getCentre());
-			// à modifier par getDirection à ajouter dans Lumiere
+			// Ã  modifier par getDirection Ã  ajouter dans Lumiere
 			shadowRay = new Rayon(vecteurLumiere, intersectionObjet);
 			//!!!\ faire une classe shadowRay ??
 
 			objet = 0; // indice de la boucle while
-			//ombre = false; // indique si l'objet est à l'ombre par rapport à la lumière courante
+			//ombre = false; // indique si l'objet est Ã  l'ombre par rapport Ã  la lumiÃ¨re courante
 			couleurLumiereCourante = lumiereCourante.getCouleur();
 			
-			// On vérifie que l'objet ne se fait pas de l'ombre lui-même 
+			// On vÃ©rifie que l'objet ne se fait pas de l'ombre lui-mÃªme 
 			ombre = objetIntersection.getSelfOmbre(intersectionObjet, rayon, lumiereCourante);
 			
 			if (!ombre) {
-				// On parcourt tous les objets pour déterminer si l'objet est à l'ombre
+				// On parcourt tous les objets pour dÃ©terminer si l'objet est Ã  l'ombre
 				while (objet < nbObjets && !ombre) {
 					objetCourant = this.scene.getObjet3D().get(objet);
 					intersectionCourante = objetCourant.estTraversePar(shadowRay);
@@ -284,7 +294,7 @@ public class RayTracing {
 				}
 			}
 
-			// Si l'objet n'est pas à l'ombre par rapport à la lumière courante
+			// Si l'objet n'est pas Ã  l'ombre par rapport Ã  la lumiÃ¨re courante
 			if (!ombre) {
 	
 				// calcul du coefficient de shadding
@@ -297,7 +307,7 @@ public class RayTracing {
 					shadding = 1;
 				}
 				
-				// mise à jour de la couleur du rayon
+				// mise Ã  jour de la couleur du rayon
 				couleurRayon = rayon.getCouleur();
 				
 				double nr = Math.min(shadding*couleurLumiereCourante.getRed(), couleurIntersection.getRed());				
@@ -308,7 +318,7 @@ public class RayTracing {
 				double ag = couleurCourante.getGreen();
 				double ab = couleurCourante.getBlue();
 				
-				// /!\ à modifier après maj de setCouleur() dans Rayon
+				// /!\ Ã  modifier aprÃ¨s maj de setCouleur() dans Rayon
 				double r = Math.max(nr, ar);
 				double g = Math.max(ng, ag);
 				double b = Math.max(nb, ab);
@@ -317,7 +327,7 @@ public class RayTracing {
 				couleurCourante = new Color((int)r, (int)g, (int)b);
 			}
 		}
-		// Si l'objet est à l'ombre pour toutes les lumières, le rayon est noir.
+		// Si l'objet est Ã  l'ombre pour toutes les lumiÃ¨res, le rayon est noir.
 		
 
 		setCouleurRayon(rayon, couleurCourante);
