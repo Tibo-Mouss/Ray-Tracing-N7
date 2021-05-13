@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import rayTracing.Rayon;
 import utilitaire.Point;
 import utilitaire.Vecteur;
+import exception.NomVideException;
 
 import java.io.Serializable;
 
@@ -20,7 +21,7 @@ import rayTracing.Lumiere;
 public class Cube implements Objet3D, Serializable {
 	
 	private static final long serialVersionUID = 5907153455163217165L;
-	private static int compteur = 0; // compteur pour les noms par défaut
+	private static int compteur = 0; // compteur pour les noms par dï¿½faut
 
 	/** Ensembles des proprietes du plan.*/
 	private Materiau properties;
@@ -38,8 +39,11 @@ public class Cube implements Objet3D, Serializable {
 	 * Toutes les normales sont dirigees vers l'exterieur du cube */
 	private ArrayList<Plan> plans;
 
-	public Cube(Point centre, double arete , String nom) {
-		this.properties = new Materiau();
+	public Cube(Point centre, double arete , String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
+		this.properties = new Properties();
 		this.nom = nom;
 		
 		this.arete = arete;
@@ -74,7 +78,7 @@ public class Cube implements Objet3D, Serializable {
 		plans.add(plan.copie());
 	}
 	
-	public Cube(Point centre, double arete) {
+	public Cube(Point centre, double arete) throws NomVideException { // ne devrait jamais throw l'exception en rï¿½alitï¿½
 		this(centre, arete, "Cube" + ++compteur);
 	}
 	
@@ -114,7 +118,7 @@ public class Cube implements Objet3D, Serializable {
 	/**
 	 * Retourne true si l'objet se fait de l'ombre lui meme
 	 * 
-	 * On deduit la face qui est en jeu. Et paf ça fait des chocapics
+	 * On deduit la face qui est en jeu. Et paf ï¿½a fait des chocapics
 	 * 
 	 * @param impact : Point d'impact du rayon qui appartient au plan
 	 * @param rayon : rayon qui va percuter le plan
@@ -168,7 +172,7 @@ public class Cube implements Objet3D, Serializable {
 
 	/** Determine la direction et sens du rayon reflechi contre le cube au point d'impact p
 	 * @param r : rayon allant frapper le cube
-	 * @param p : point où a lieu la collision
+	 * @param p : point oï¿½ a lieu la collision
 	 */
 	@Override
 	public Vecteur directionReflexion(Rayon r, Point p) {
@@ -209,7 +213,7 @@ public class Cube implements Objet3D, Serializable {
 			this.plans.get(i).rotation(rx, ry, rz);
 		}
 		//Ca me parait un peu foireux comme methode faudra voir apres ave l'interface graphique si
-		//ça marche comme ça.
+		//ï¿½a marche comme ï¿½a.
 	}
 
 	/**
@@ -217,7 +221,10 @@ public class Cube implements Objet3D, Serializable {
 	 * @param nom : mon instinct me dit que ce parametre designe le nom de l'objet
 	 */
 	@Override
-	public void setNom(String nom) {
+	public void setNom(String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.nom = nom;
 	}
 	
@@ -225,7 +232,7 @@ public class Cube implements Objet3D, Serializable {
 	 * @param point : point d'impact
 	 * @return Renvoie l'indice du plan correspondant
 	 *  			Si le point n'appartient pas au cube --> renvoie -1
-	 * 				Si le point appartient à une arete/coin --> renvoie un plan au hasard
+	 * 				Si le point appartient ï¿½ une arete/coin --> renvoie un plan au hasard
 	 * 					entre ceux qu'il touche
 	 */
 	public int appartientCube(Point point) {
@@ -273,7 +280,7 @@ public class Cube implements Objet3D, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Cube(" + this.nom + ")@(" + this.centre.getX() + ", " + this.centre.getY() + ", " + this.centre.getZ() + ") arête : "+this.arete;
+		return "Cube(" + this.nom + ")@(" + this.centre.getX() + ", " + this.centre.getY() + ", " + this.centre.getZ() + ") arï¿½te : "+this.arete;
 	}
 	
 	public void afficherCollection() {

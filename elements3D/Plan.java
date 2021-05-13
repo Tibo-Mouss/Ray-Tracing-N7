@@ -3,6 +3,7 @@ package elements3D;
 import rayTracing.Rayon;
 import utilitaire.Point;
 import utilitaire.Vecteur;
+import exception.NomVideException;
 
 import java.io.Serializable;
 
@@ -16,8 +17,8 @@ import rayTracing.Lumiere;
 
 public class Plan implements Objet3D, Serializable {
 	
-	private static final long serialVersionUID = 5907153455163217165L;
-	private static int compteur = 0; // compteur pour les noms par défaut
+	private static final long serialVersionUID = 7303995654083808341L;
+	private static int compteur = 0; // compteur pour les noms par dï¿½faut
 
 	/** Ensembles des proprietes du plan.*/
 	private Materiau properties;
@@ -31,18 +32,24 @@ public class Plan implements Objet3D, Serializable {
 	/** Nom du plan */
 	private String nom;
 
-	public Plan(Vecteur normale, Point point, String nom) {
+	public Plan(Vecteur normale, Point point, String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.normale = normale.copie();
 		this.point = point.copie();
 		this.properties = new Materiau();
 		this.nom = nom;
 	}
 	
-	public Plan(Vecteur normale, Point point) {
+	public Plan(Vecteur normale, Point point)  throws NomVideException { // ne devrait jamais throw l'exception en rï¿½alitï¿½
 		this(normale, point, "Plan" + ++compteur);
 	}
 	
-	public Plan(Vecteur normale, Point point, String nom, Materiau proprietes) {
+	public Plan(Vecteur normale, Point point, String nom, Properties proprietes) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.normale = normale.copie();
 		this.point = point.copie();
 		this.properties = proprietes;
@@ -50,7 +57,7 @@ public class Plan implements Objet3D, Serializable {
 	}
 	
 	//----------------------------------------------------------------------
-	// Méthodes get
+	// Mï¿½thodes get
 	
 	@Override
 	public Propriete getMateriau(int num) {
@@ -206,7 +213,10 @@ public class Plan implements Objet3D, Serializable {
 	 * @param nom : mon instinct me dit que ce parametre designe le nom de l'objet
 	 */
 	@Override
-	public void setNom(String nom) {
+	public void setNom(String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.nom = nom;
 	}
 	
@@ -222,7 +232,13 @@ public class Plan implements Objet3D, Serializable {
 	 * Retourne la copie du plan pour la robustesse
 	 */
 	public Plan copie() {
-		return new Plan(this.normale, this.point, this.nom, this.properties);
+		Plan copie = null;
+		try {
+			copie = new Plan(this.normale, this.point, this.nom, this.properties);
+		} catch (NomVideException e) {
+			// ne devrait pas arriver
+		}
+		return copie;
 	}
 
 	@Override

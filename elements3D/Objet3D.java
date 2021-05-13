@@ -5,6 +5,7 @@ package elements3D;
 
 import rayTracing .*;
 import utilitaire .*;
+import exception.NomVideException;
 
 /** Objet3D représente le type general des objets 3D presents dans une scene
  * @author Edgar
@@ -21,7 +22,7 @@ public interface Objet3D {
 	/** redéfinir le nom de l'objet
 	 * @param nom : nouveau nom
 	 */
-	public void setNom(String nom);
+	public void setNom(String nom) throws NomVideException;
 	
 	/** Indiquer si une objet est traversé par un rayon, et si oui en quel point
 	 * @param r : rayon lumineux

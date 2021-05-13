@@ -1,8 +1,7 @@
 package rayTracing;
-import elements3D .*;
+import exception .*;
 import utilitaire .*;
 import java.awt.Color;
-import java.awt.color.*;
 
 //Ces imports servent a sauvegarder l'image en tant que fichier
 import java.io.File;
@@ -54,10 +53,14 @@ public class Camera {
 	 * @param pixelHauteur : 
 	 * @param pixelLongueur
 	 * @param VHaut : 
+	 * @throws TaillePixelsImageException 
 	 */
-	public Camera(Point centreCamera, Vecteur vecteurCameraEcran, int pixelHauteur, int pixelLongueur, Vecteur VHaut) {
+	public Camera(Point centreCamera, Vecteur vecteurCameraEcran, int pixelHauteur, int pixelLongueur, Vecteur VHaut) throws TaillePixelsImageException {
 		this.centreCamera = centreCamera.copie();
 		this.vecteurCameraEcran = vecteurCameraEcran.copie();
+		if (pixelHauteur <= 0) {
+			throw new TaillePixelsImageException("Le nombre de pixel de hauteur de la caméra est négatif ou nul.");
+		}
 		this.pixelHauteur = pixelHauteur;
 		this.pixelLongueur = pixelLongueur;
 		this.VHaut = VHaut.copie();
@@ -71,7 +74,7 @@ public class Camera {
 	}
 	
 	//----------------------------------------------------------------------------------------------
-	// Methodes get...
+	// Methodes get... et d'affichage
 	
 	/** Obtenir le centre de la camera.
 	 * @return point/centre de la camera
@@ -223,8 +226,12 @@ public class Camera {
 	
 	/** Modifier la valeur de focale de la camera et la reinitialise
 	 * @param focale : nouvelle valeur de la focale de la camera
+	 * @throws FocaleNegativeException 
 	 */
-	public void setFocale(double focale) {
+	public void setFocale(double focale) throws FocaleNegativeException {
+		if (focale <= 0) {
+			throw new FocaleNegativeException("Focale négative.");
+		}
 		this.vecteurCameraEcran = this.vecteurCameraEcran.multiplication(focale/this.vecteurCameraEcran.module());
 		initialiserImage();
 	}
@@ -267,8 +274,13 @@ public class Camera {
 	 * Sauvegarde l'image en mémoire pour l'obtenir au format png en sortie.
 	 * @param img Image en mémoire.
 	 * @param nom Nom de l'image.
+	 * @throws SauvegarderFichierException 
 	 */
-	public void sauvegarderImage(BufferedImage img,String nom) {		
+	public void sauvegarderImage(BufferedImage img,String nom) throws SauvegarderFichierException {		
+		if (nom.isEmpty()) {
+			throw new SauvegarderFichierException("Nom invalide, il faut au moins un charactère");
+		}
+		
 		//img.toString();
 		File f = null;
 		

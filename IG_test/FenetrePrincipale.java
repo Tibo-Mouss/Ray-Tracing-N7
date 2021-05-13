@@ -23,7 +23,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-
+import IG.EnregistrerImage;
+import IG.EnregistrerScene;
+import IG.FenetreLumiere;
+import IG.ListeLumieres;
+import IG.ListeObjets;
+import IG.Lumieres;
+import IG.Objet;
+import IG.FenetrePrincipale.ActionAjouterLumiere;
+import IG.FenetrePrincipale.ActionAjouterObjet;
+import IG.FenetrePrincipale.ActionEnregistrerI;
+import IG.FenetrePrincipale.ActionEnregistrerS;
+import IG.FenetrePrincipale.ActionOuvrirLumiere;
 import elements3D.Sphere;
 import rayTracing.RayTracing;
 import utilitaire.Point;
@@ -115,7 +126,7 @@ public class FenetrePrincipale {
 	    itemAjouterO.addActionListener(new ActionAjouterObjet());
 		menuEditer.add(itemAjouterO);
 		
-		JMenuItem itemAjouterL = new JMenuItem("Ajouter Lumière");
+		JMenuItem itemAjouterL = new JMenuItem("Ajouter Lumiï¿½re");
 		itemAjouterL.setMnemonic( 'L' );
 		itemAjouterL.addActionListener(new ActionAjouterLumiere());
 		menuEditer.add(itemAjouterL);
@@ -246,11 +257,11 @@ public class FenetrePrincipale {
 	public class ActionOuvrirLumiere extends MouseAdapter {
 		public void mouseClicked(MouseEvent evt) {
 	        if (evt.getClickCount() == 2) {
-				FenetreLumiere lux = new FenetreLumiere(rayTracing,listeL,listLumieres);
-				lux.setVisible(true);
+				//FenetreLumiere lux = new FenetreLumiere("Lumiï¿½re", rayTracing,listeL,listLumieres);
+				//lux.setVisible(true);
 	        } else if (evt.getClickCount() == 3) {
-				FenetreLumiere lux = new FenetreLumiere(rayTracing,listeL,listLumieres);
-				lux.setVisible(true);
+				//FenetreLumiere lux = new FenetreLumiere("Lumiï¿½re", rayTracing,listeL,listLumieres);
+				//lux.setVisible(true);
 	        }
 		}
 	}
@@ -279,7 +290,7 @@ public class FenetrePrincipale {
 	public class ActionEnregistrerS implements ActionListener {
 		
 		public void actionPerformed(ActionEvent ev) {
-			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scène", rayTracing);
+			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scï¿½ne", rayTracing);
 			enregistrer.setVisible(true);
 			
 		}
@@ -288,9 +299,9 @@ public class FenetrePrincipale {
 	public class ActionLancerCalcul implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
 			rayTracing.lancerRayTracing();
-			System.out.printf("Calcul lancé ...\n");
+			System.out.printf("Calcul lancï¿½ ...\n");
 			imageRT.setIcon(new ImageIcon(rayTracing.getCamera().creerImage()));
-			System.out.printf("Calcul Terminé \n");
+			System.out.printf("Calcul Terminï¿½ \n");
 		}
 	}
 	

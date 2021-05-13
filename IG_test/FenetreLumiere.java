@@ -406,8 +406,8 @@ public class FenetreLumiere extends JFrame {
 				//raytracing.getScene().addLumiere(lumiere);
 			//} catch (LumiereHorsSceneException e) {
 		    	//int n = JOptionPane.showOptionDialog(new JFrame(),
-		    		//"Attention ! La lumiere est hors scène.\n Voulez-vous toujours l'ajouter ? ",
-		    	    //"Lumière hors scène  ",
+		    		//"Attention ! La lumiere est hors scï¿½ne.\n Voulez-vous toujours l'ajouter ? ",
+		    	    //"Lumiï¿½re hors scï¿½ne  ",
 		    	    //JOptionPane.WARNING_MESSAGE, 
 		    	    //JOptionPane.YES_NO_OPTION,
 		    	    //null,    
