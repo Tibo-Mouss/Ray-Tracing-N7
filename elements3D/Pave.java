@@ -46,6 +46,7 @@ public class Pave implements Objet3D, Serializable {
 	 * Toutes les normales sont dirigees vers l'exterieur du cube */
 	private ArrayList<Plan> plans;
 
+	//Construit le pave en precisant la longueur des trois aretes
 	public Pave(Point centre, double areteX, double areteY, double areteZ, String nom) {
 		this.properties = new Properties();
 		this.nom = nom;
@@ -55,6 +56,23 @@ public class Pave implements Objet3D, Serializable {
 		this.areteZ = areteZ;
 		this.centre = centre.copie();
 		
+		finConstructionPave();
+	}
+	
+	//Construit un cube
+	public Pave(Point centre, double arete, String nom) {
+		this.properties = new Properties();
+		this.nom = nom;
+		
+		this.areteX = arete;
+		this.areteY = arete;
+		this.areteZ = arete;
+		this.centre = centre.copie();
+		
+		finConstructionPave();
+	}
+	
+	private void finConstructionPave () {
 		X = new Vecteur(1, 0, 0);
 		Y = new Vecteur(0, 1, 0);
 		Z = new Vecteur(0, 0, 1);
@@ -269,18 +287,26 @@ public class Pave implements Objet3D, Serializable {
 				//on sait que le point appartient au plan, mais on ne sait pas si il appartient
 				//a la face du carre
 								
-				Vecteur vecteurDeTest = new Vecteur(1.0, 1.0, 1.0);
-				vecteurDeTest = vecteurDeTest.soustraire(this.plans.get(i).getNormale().abs());
+				Vecteur vecteurDeTest = new Vecteur(1,1,1);
+				if ( i == 0 | i == 1 ) {
+					vecteurDeTest = new Vecteur(0.0, 1.0, 1.0);
+				} else if ( i == 2 | i == 3 ) {
+					vecteurDeTest = new Vecteur(1.0, 0.0, 1.0);
+				} else if ( i == 4 | i == 5 ) {
+					vecteurDeTest = new Vecteur(1.0, 1.0, 0.0);
+				} else {
+					System.out.println("ES GIBT EIN PROBLEM ACH");
+				}
 				//VecteurDeTest va servir a pouvoir tester sur les deux autres coordonnees autres
 				//que la normale
 				
 				//Check si il appartient au segment [-arete ; arete] sur chaque coordonnee
 				if ( 	(vecteurDeTest.getX() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getX()) < this.areteX/2 ) &
+							Math.abs(relatifPointPlan.produitScalaire(X)) < this.areteX/2 ) &
 						(vecteurDeTest.getY() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getY()) < this.areteY/2 ) &
+							Math.abs(relatifPointPlan.produitScalaire(Y)) < this.areteY/2 ) &
 						(vecteurDeTest.getZ() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getZ()) < this.areteZ/2 ) ) {
+							Math.abs(relatifPointPlan.produitScalaire(Z)) < this.areteZ/2 ) ) {
 					return i;
 				}
 				
@@ -297,7 +323,7 @@ public class Pave implements Objet3D, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Cube(" + this.nom + ")@(" + this.centre.getX() + ", " + this.centre.getY() + ", " + this.centre.getZ() + ") arête : "+this.arete;
+		return "Cube(" + this.nom + ")@(" + this.centre.getX() + ", " + this.centre.getY() + ", " + this.centre.getZ() + "), cotes : ("+this.areteX+","+this.areteY+","+this.areteZ+")";
 	}
 	
 	public void afficherCollection() {

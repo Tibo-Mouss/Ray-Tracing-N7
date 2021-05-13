@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import elements3D.Couleur;
 import elements3D.Cube;
+import elements3D.Pave;
 import elements3D.Sphere;
 import exception.LumiereHorsSceneException;
 import exception.MaxRebondsNegatifException;
@@ -22,7 +23,7 @@ public class SceneSimple1 {
 		scene.setCouleur(Color.WHITE);
 		
 			// Ajout d'un cube
-		Cube cube = new Cube(new Point(0,0,0), 4, "Cube");
+		Pave cube = new Pave(new Point(0,0,0), 4, 2, 10, "Cube");
 	    Couleur couleur = (Couleur)cube.getMateriau(0);
 		couleur.set(255, 0, 0);
 		try {

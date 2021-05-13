@@ -263,19 +263,27 @@ public class Cube implements Objet3D, Serializable {
 			if ( Math.abs(produitScalaire) < Objet3D.EPSILON) {
 				//on sait que le point appartient au plan, mais on ne sait pas si il appartient
 				//a la face du carre
-								
-				Vecteur vecteurDeTest = new Vecteur(1.0, 1.0, 1.0);
-				vecteurDeTest = vecteurDeTest.soustraire(this.plans.get(i).getNormale().abs());
+				
+				Vecteur vecteurDeTest = new Vecteur(1,1,1);
+				if (this.X.produitScalaire(relatifPointPlan) > Objet3D.EPSILON) {
+					vecteurDeTest = new Vecteur(0.0, 1.0, 1.0);
+				} else if (this.Y.produitScalaire(relatifPointPlan) > Objet3D.EPSILON) {
+					vecteurDeTest = new Vecteur(1.0, 0.0, 1.0);
+				} else if (this.Z.produitScalaire(relatifPointPlan) > Objet3D.EPSILON) {
+					vecteurDeTest = new Vecteur(1.0, 1.0, 0.0);
+				} else {
+					System.out.println("ES GIBT EIN PROBLEM ACH");
+				}
 				//VecteurDeTest va servir a pouvoir tester sur les deux autres coordonnees autres
 				//que la normale
 				
 				//Check si il appartient au segment [-arete ; arete] sur chaque coordonnee
 				if ( 	(vecteurDeTest.getX() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getX()) < this.arete/2 ) &
+							Math.abs(relatifPointPlan.produitScalaire(X)) < this.arete/2 ) &
 						(vecteurDeTest.getY() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getY()) < this.arete/2 ) &
+							Math.abs(relatifPointPlan.produitScalaire(Y)) < this.arete/2 ) &
 						(vecteurDeTest.getZ() < Objet3D.EPSILON | 
-							Math.abs(relatifPointPlan.getZ()) < this.arete/2 ) ) {
+							Math.abs(relatifPointPlan.produitScalaire(Z)) < this.arete/2 ) ) {
 					return i;
 				}
 				
