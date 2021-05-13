@@ -3,6 +3,7 @@ package elements3D;
 import rayTracing.Rayon;
 import utilitaire.Point;
 import utilitaire.Vecteur;
+import exception.NomVideException;
 
 import java.io.Serializable;
 
@@ -31,18 +32,24 @@ public class Plan implements Objet3D, Serializable {
 	/** Nom du plan */
 	private String nom;
 
-	public Plan(Vecteur normale, Point point, String nom) {
+	public Plan(Vecteur normale, Point point, String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.normale = normale.copie();
 		this.point = point.copie();
 		this.properties = new Properties();
 		this.nom = nom;
 	}
 	
-	public Plan(Vecteur normale, Point point) {
+	public Plan(Vecteur normale, Point point)  throws NomVideException { // ne devrait jamais throw l'exception en réalité
 		this(normale, point, "Plan" + ++compteur);
 	}
 	
-	public Plan(Vecteur normale, Point point, String nom, Properties proprietes) {
+	public Plan(Vecteur normale, Point point, String nom, Properties proprietes) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.normale = normale.copie();
 		this.point = point.copie();
 		this.properties = proprietes;
@@ -206,7 +213,10 @@ public class Plan implements Objet3D, Serializable {
 	 * @param nom : mon instinct me dit que ce parametre designe le nom de l'objet
 	 */
 	@Override
-	public void setNom(String nom) {
+	public void setNom(String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.nom = nom;
 	}
 	
@@ -222,7 +232,13 @@ public class Plan implements Objet3D, Serializable {
 	 * Retourne la copie du plan pour la robustesse
 	 */
 	public Plan copie() {
-		return new Plan(this.normale, this.point, this.nom, this.properties);
+		Plan copie = null;
+		try {
+			copie = new Plan(this.normale, this.point, this.nom, this.properties);
+		} catch (NomVideException e) {
+			// ne devrait pas arriver
+		}
+		return copie;
 	}
 
 	@Override

@@ -5,6 +5,7 @@ package elements3D;
 
 import rayTracing .*;
 import utilitaire .*;
+import exception.NomVideException;
 
 import java.io.Serializable;
 import java.lang.Math;
@@ -39,8 +40,11 @@ public class Sphere implements Objet3D, Serializable {
 	 * @param rayon : rayon de la sphere
 	 * @pre origine != null && rayon > 0.0
 	 */
-	public Sphere(Point origine, double rayon, String nom) {
+	public Sphere(Point origine, double rayon, String nom) throws NomVideException {
 		assert origine != null && rayon > 0.0;
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		double x = origine.getX();
 		double y = origine.getY();
 		double z = origine.getZ();
@@ -56,7 +60,7 @@ public class Sphere implements Objet3D, Serializable {
 	 * @param rayon : rayon de la sphere
 	 * @pre origine != null && rayon > 0.0
 	 */
-	public Sphere(Point origine, double rayon) {
+	public Sphere(Point origine, double rayon) throws NomVideException { // ne devrait jamais throw l'exception en réalité
 		this(origine, rayon, "Sphere" + ++compteur);
 	}
 	
@@ -170,7 +174,10 @@ public class Sphere implements Objet3D, Serializable {
 	}
 
 	@Override
-	public void setNom(String newNom) {
+	public void setNom(String newNom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.nom = newNom;
 	}
 

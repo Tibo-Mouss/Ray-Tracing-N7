@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import rayTracing.Rayon;
 import utilitaire.Point;
 import utilitaire.Vecteur;
+import exception.NomVideException;
 
 import java.io.Serializable;
 
@@ -38,7 +39,10 @@ public class Cube implements Objet3D, Serializable {
 	 * Toutes les normales sont dirigees vers l'exterieur du cube */
 	private ArrayList<Plan> plans;
 
-	public Cube(Point centre, double arete , String nom) {
+	public Cube(Point centre, double arete , String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.properties = new Properties();
 		this.nom = nom;
 		
@@ -74,7 +78,7 @@ public class Cube implements Objet3D, Serializable {
 		plans.add(plan.copie());
 	}
 	
-	public Cube(Point centre, double arete) {
+	public Cube(Point centre, double arete) throws NomVideException { // ne devrait jamais throw l'exception en réalité
 		this(centre, arete, "Cube" + ++compteur);
 	}
 	
@@ -217,7 +221,10 @@ public class Cube implements Objet3D, Serializable {
 	 * @param nom : mon instinct me dit que ce parametre designe le nom de l'objet
 	 */
 	@Override
-	public void setNom(String nom) {
+	public void setNom(String nom) throws NomVideException {
+		if (NomVideException.estVide(nom)) {
+			throw new NomVideException();
+		}
 		this.nom = nom;
 	}
 	
