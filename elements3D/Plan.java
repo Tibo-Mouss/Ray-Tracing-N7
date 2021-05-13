@@ -16,7 +16,8 @@ import rayTracing.Lumiere;
 
 public class Plan implements Objet3D, Serializable {
 	
-	private static final long serialVersionUID = 5907153455163217165L;
+	
+	private static final long serialVersionUID = 7303995654083808341L;
 	private static int compteur = 0; // compteur pour les noms par défaut
 
 	/** Ensembles des proprietes du plan.*/
