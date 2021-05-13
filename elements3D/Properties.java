@@ -28,6 +28,7 @@ public class Properties implements Serializable {
 		// NUMERO COULEUR = 0
 		this.materiaux[0] = new Couleur();
 		this.materiaux[1] = new Reflectivite(1, false);
+		this.materiaux[2] = new Refraction(1, false);
 		// Ajouter ici l'initialisation d'un nouveau type de matériau
 	}
 	

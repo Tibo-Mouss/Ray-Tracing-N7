@@ -22,6 +22,7 @@ public class Reflectivite implements Materiau, Serializable {
 	private boolean on;
 	
 	Reflectivite(double reflectivite, boolean on) {
+		assert (0 <= reflectivite  && reflectivite <= 1);
 		this.intensite = reflectivite;
 		this.on = on;
 	}
