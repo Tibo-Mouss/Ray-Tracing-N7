@@ -41,7 +41,7 @@ public class SceneSimple1 {
 		}
 		
 		// Création de la caméra
-		Camera camera = new Camera(new Point(-15,7,8),new Vecteur(10, -7, -8),500,500,new Vecteur(0,0,10));
+		Camera camera = new Camera(new Point(-15,7,-8),new Vecteur(10, -7, 8),500,500,new Vecteur(0,0,10));
 		camera.printVecteursIterateurs();
 		camera.printCoinsFenetre();
 		
@@ -49,7 +49,7 @@ public class SceneSimple1 {
 		// Lancement du ray tracing
 		RayTracing raytracing;
 		try {
-			raytracing = new RayTracing(scene, camera, 10, false,false);
+			raytracing = new RayTracing(scene, camera, 10, true,false);
 			raytracing.lancerRayTracing();
 		} catch (MaxRebondsNegatifException e) {
 			e.printStackTrace();

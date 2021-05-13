@@ -33,6 +33,9 @@ public class Cone implements Objet3D, Serializable {
 	/** Centre du cercle de la pyramide */
 	private Point centreBase;
 	
+	/** Sommet du Cone*/
+	private Point sommet;
+	
 	/** Hauteur de la pyramide */
 	private double hauteur;
 	
@@ -58,6 +61,9 @@ public class Cone implements Objet3D, Serializable {
 		
 		this.hauteur = hauteur;
 		this.rayon = rayon;
+		
+		this.sommet = this.centreBase.copie();
+		this.sommet.translater(VHaut.multiplication(hauteur));
 	}
 	
 	public Cone(Point centre_base, Vecteur VHaut, double hauteur, double rayon) {
@@ -100,7 +106,17 @@ public class Cone implements Objet3D, Serializable {
 			return this.planCercle.getNormal(impact, rayon);
 		} else if( indice == 2) {
 			Vecteur normale = new Vecteur(this.centreBase, impact);
-			normale.retirerProjection(VHaut);
+			
+			Vecteur projectionBase = normale.copie();
+			projectionBase.retirerProjection(VHaut);
+			projectionBase.multiplication(this.rayon / projectionBase.module());
+			
+			Point pointPeripherieBase = this.centreBase;
+			pointPeripherieBase.translater(projectionBase);
+			
+			Vecteur VPeripherieSommet = new Vecteur(pointPeripherieBase, this.sommet);
+			
+			normale.retirerProjection(VPeripherieSommet);
 			return normale;
 		}
 		
@@ -158,9 +174,9 @@ public class Cone implements Objet3D, Serializable {
 		
 		//Test si il traverse le reste
 		Vecteur D = this.VHaut.multiplication(-1);
-		Vecteur U = r.getDirection();
+		Vecteur U = r.getDirection().copie();
 		double gamma = this.hauteur / Math.sqrt(this.hauteur*this.hauteur + this.rayon*this.rayon);
-		Point P = r.getOrigine();
+		Point P = r.getOrigine().copie();
 		Point V = this.centreBase.copie();
 		V.translater(VHaut.multiplication(hauteur));
 		Vecteur delta = new Vecteur(V,P);
@@ -175,8 +191,8 @@ public class Cone implements Objet3D, Serializable {
 			double petitDelta = c1*c1 - c0*c2;
 			if (petitDelta > 0) {
 				//Cela veut dire que le rayon intersecte bien le double-sided cone
-				t1 = -c1 + Math.sqrt(petitDelta)/c2;
-				t2 = -c1 - Math.sqrt(petitDelta)/c2;
+				t1 = (-c1 + Math.sqrt(petitDelta))/c2;
+				t2 = (-c1 - Math.sqrt(petitDelta))/c2;
 			}
 		} else if (Math.abs(c2) < Objet3D.EPSILON & Math.abs(c1) > Objet3D.EPSILON) {
 			t1 = -c0 / (2*c1);
@@ -304,7 +320,7 @@ public class Cone implements Objet3D, Serializable {
 		Vecteur relatif_PointCentreBase = new Vecteur(this.centreBase,point);
 		if (this.VHaut.produitScalaire(relatif_PointCentreBase) < Objet3D.EPSILON) {
 			//On sait qu'on est dans le plan
-			if (point.distance(this.centreBase) > this.rayon) {
+			if (point.distance(this.centreBase) < this.rayon) {
 				return 1;
 			}
 		}
@@ -329,7 +345,8 @@ public class Cone implements Objet3D, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Pyramide(" + this.nom + ")@(" + this.centreBase.getX() + ", " + this.centreBase.getY() + ", " + this.centreBase.getZ() + ") hauteur : "+this.hauteur;
+		return "Pyramide(" + this.nom + ")@(" + this.centreBase.getX() + ", " + this.centreBase.getY() 
+			+ ", " + this.centreBase.getZ() + ") hauteur : "+this.hauteur + "   rayon : " + this.rayon;
 	}
 	
 	
