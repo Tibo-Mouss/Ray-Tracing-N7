@@ -1,27 +1,42 @@
 /**
- * 
+ *  
  */
 package elements3D;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 import rayTracing .*;
 import utilitaire .*;
 
-/** Materiau représente le type général de n'importe quel matériau des objets 3D
+/** Properties regroupe l'ensemble des Matériaux en une classe 
+ * qui stocke les propriétés de chaque Objet3D.
  * @author Edgar
  */
-public interface Materiau {
-		
-	/** Indiquer si le matériau d'un objet est à prendre en compte
-	 * @return statut du matériau
-	 */
-	public boolean isOn();
+public class Materiau implements Serializable {
 	
-	/** Réinitialise le matériau à ses valeurs par défaut
-	 */
-	public void reset();
+	private static final long serialVersionUID = 385803258376068043L;
+
+	// nombre de matériaux implémentés jusqu'alors
+	public static final int NB_PROPRIETES = 3; 
 	
-	/** Créer les rayons fils issus de la collision un objet. */
-	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection);
+	/** Liste de l'ensemble des matériaux que nous avons choisi de pouvoir 
+	 * traiter dans notre application*/
+	private Propriete[] materiaux = new Propriete[NB_PROPRIETES];
+	
+	/** Créer l'ensemble des propriétés d'un objet et initialiser chacune.*/
+	public Materiau() {
+		// NUMERO COULEUR = 0
+		this.materiaux[0] = new Couleur();
+		this.materiaux[1] = new Reflectivite(1, false);
+		this.materiaux[2] = new Refraction(1, 1, false);
+		// Ajouter ici l'initialisation d'un nouveau type de matériau
+	}
+	
+	/** Obtenir un matériau contenant des informations sur l'objet
+	 * @param num identificateur de matériau
+	 * @return matériau demandé de l'objet
+	 */
+	public Propriete getMateriau(int num) {
+		return this.materiaux[num];
+	}
 }

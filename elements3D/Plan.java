@@ -20,7 +20,7 @@ public class Plan implements Objet3D, Serializable {
 	private static int compteur = 0; // compteur pour les noms par défaut
 
 	/** Ensembles des proprietes du plan.*/
-	private Properties properties;
+	private Materiau properties;
 	
 	/** Vecteur normal au plan*/
 	private Vecteur normale;
@@ -34,7 +34,7 @@ public class Plan implements Objet3D, Serializable {
 	public Plan(Vecteur normale, Point point, String nom) {
 		this.normale = normale.copie();
 		this.point = point.copie();
-		this.properties = new Properties();
+		this.properties = new Materiau();
 		this.nom = nom;
 	}
 	
@@ -42,7 +42,7 @@ public class Plan implements Objet3D, Serializable {
 		this(normale, point, "Plan" + ++compteur);
 	}
 	
-	public Plan(Vecteur normale, Point point, String nom, Properties proprietes) {
+	public Plan(Vecteur normale, Point point, String nom, Materiau proprietes) {
 		this.normale = normale.copie();
 		this.point = point.copie();
 		this.properties = proprietes;
@@ -53,8 +53,8 @@ public class Plan implements Objet3D, Serializable {
 	// Méthodes get
 	
 	@Override
-	public Materiau getMateriau(int num) {
-		assert 0 <= num && num < Properties.NB_MATERIAUX;
+	public Propriete getMateriau(int num) {
+		assert 0 <= num && num < Materiau.NB_PROPRIETES;
 		return this.properties.getMateriau(num);
 	}
 	

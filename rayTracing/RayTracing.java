@@ -61,14 +61,14 @@ public class RayTracing {
 	}
 	
 	/**
-	 * Obtenir la camère.
-	 * @return Caméra avec laquelle Ray Tracing opère.
+	 * Obtenir la camera.
+	 * @return Camera avec laquelle Ray Tracing opere.
 	 */
 	public Camera getCamera() {
 		return this.camera;
 	}
 	
-	/** Obtenir la couleur finale d'un pixel à partir de ses rayons fils.
+	/** Obtenir la couleur finale d'un pixel a partir de ses rayons fils.
 	 * @param listeRayonsFinaux la liste des rayons fils finaux
 	 * @return la couleur finale du pixel
 	 */
@@ -159,7 +159,7 @@ public class RayTracing {
 		double distanceCourante;
 		
 		//parcours des Materiau
-		Materiau materiauCourant;
+		Propriete materiauCourant;
 		
 		//Parcours des objets de la scene
 		for (int k=0; k < this.scene.getObjet3D().size(); k++) {
@@ -204,7 +204,7 @@ public class RayTracing {
 				boolean allOff = true;
 				
 				//Parcours des Materiau, ie propriétés de l'objet intersecté
-				for (int materiau = 1 ; materiau < Properties.NB_MATERIAUX ; materiau++) {
+				for (int materiau = 1 ; materiau < Materiau.NB_PROPRIETES ; materiau++) {
 					materiauCourant = objetIntersection.getMateriau(materiau);
 					if (materiauCourant.isOn()) {
 						

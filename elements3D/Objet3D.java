@@ -66,7 +66,7 @@ public interface Objet3D {
 	 * @pre 0 <= num < Properties.NB_MATERIAUX
 	 * @return matériau demandé de l'objet
 	 */
-	public Materiau getMateriau(int num);
+	public Propriete getMateriau(int num);
 	
 	/** Obtenir le vecteur normal à l'objet au point d'impact
 	 * @param impact : point d'impact

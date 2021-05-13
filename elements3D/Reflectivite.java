@@ -14,7 +14,7 @@ import utilitaire.Point;
  * @author Edgar
  *
  */
-public class Reflectivite implements Materiau, Serializable {
+public class Reflectivite implements Propriete, Serializable {
 
 	private static final long serialVersionUID = 4874702146396229178L;
 	

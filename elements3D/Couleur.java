@@ -14,7 +14,7 @@ import utilitaire.Point;
  * @author Edgar
  *
  */
-public class Couleur implements Materiau, Serializable {
+public class Couleur implements Propriete, Serializable {
 	
 	private static final long serialVersionUID = 1341431705338909785L;
 
