@@ -19,30 +19,31 @@ import rayTracing.Lumiere;
 
 public class Pave implements Objet3D, Serializable {
 	
-	private static final long serialVersionUID = 5907153455163217165L;
+	private static final long serialVersionUID = -5565642816688199212L;
+
 	private static int compteur = 0; // compteur pour les noms par défaut
 
-	/** Ensembles des proprietes du plan.*/
+	/** Ensembles des proprietes du pave.*/
 	private Properties properties;
 	
-	/** Nom du plan */
+	/** Nom du pave */
 	private String nom;
 	
-	/** Centre du cube */
+	/** Centre du pave */
 	private Point centre;
 	
-	/** Arete du cube */
+	/** Arete du pave */
 	private double areteX;
 	private double areteY;
 	private double areteZ;
 	
 	
-	/** Axes propres du cube */
+	/** Axes propres du pave */
 	private Vecteur X;
 	private Vecteur Y;
 	private Vecteur Z;
 	
-	/** Liste des plans constituants le cube 
+	/** Liste des plans constituants le pave
 	 * Toutes les normales sont dirigees vers l'exterieur du cube */
 	private ArrayList<Plan> plans;
 
@@ -59,7 +60,7 @@ public class Pave implements Objet3D, Serializable {
 		finConstructionPave();
 	}
 	
-	//Construit un cube
+	//Construit un pave
 	public Pave(Point centre, double arete, String nom) {
 		this.properties = new Properties();
 		this.nom = nom;
@@ -126,15 +127,15 @@ public class Pave implements Objet3D, Serializable {
 	
 	/**
 	 * Retourne la normale au point d'impact et aussi son sens grace au rayon
-	 * @param impact : Point d'impact du rayon qui appartient au plan
-	 * @param rayon : rayon qui va peruter le plan
+	 * @param impact : Point d'impact du rayon qui appartient au pave
+	 * @param rayon : rayon qui va peruter le pave
 	 */
 	@Override
 	public Vecteur getNormal(Point impact, Rayon rayon) {
 		assert impact != null && rayon != null;
 		int indice = appartientPave(impact);
 		
-		//Assert pt d'impact appartient au cube
+		//Assert pt d'impact appartient au pave
 		if (indice == -1) {
 			System.out.println("getNormal : Le point n'appartient pas au pave");
 			return null;
@@ -148,8 +149,8 @@ public class Pave implements Objet3D, Serializable {
 	 * 
 	 * On deduit la face qui est en jeu. Et paf ça fait des chocapics
 	 * 
-	 * @param impact : Point d'impact du rayon qui appartient au plan
-	 * @param rayon : rayon qui va percuter le plan
+	 * @param impact : Point d'impact du rayon qui appartient au pave
+	 * @param rayon : rayon qui va percuter le pave
 	 * @param lumiere : Lumiere de la scene
 	 **/
 	@Override
@@ -157,7 +158,7 @@ public class Pave implements Objet3D, Serializable {
 		assert impact != null && rayon != null && lumiere != null;
 		int indice = appartientPave(impact);
 		
-		//Assert pt d'impact appartient au cube
+		//Assert pt d'impact appartient au pave
 		if (indice == -1) {
 			System.out.println("getSelfOmbre : Le point n'appartient pas au pave");
 			return false;
@@ -199,7 +200,7 @@ public class Pave implements Objet3D, Serializable {
 	}
 
 	/** Determine la direction et sens du rayon reflechi contre le pave au point d'impact p
-	 * @param r : rayon allant frapper le cube
+	 * @param r : rayon allant frapper le pave
 	 * @param p : point où a lieu la collision
 	 */
 	@Override
@@ -207,9 +208,9 @@ public class Pave implements Objet3D, Serializable {
 		assert r != null && p != null;
 		int indice = appartientPave(p);
 		
-		//Assert pt d'impact appartient au cube
+		//Assert pt d'impact appartient au pave
 		if (indice == -1) {
-			System.out.println("Dir Reflexion : Le point n'appartient pas au cube");
+			System.out.println("Dir Reflexion : Le point n'appartient pas au pave");
 			return null;
 		}
 		
@@ -217,7 +218,7 @@ public class Pave implements Objet3D, Serializable {
 	}
 
 	/**Translate le pave de dx, dy, dz
-	 * @param dx,dy,dz : De combien sur chaque axe le plan va etre translate
+	 * @param dx,dy,dz : De combien sur chaque axe le pave va etre translate
 	 */
 	@Override
 	public void translater(double dx, double dy, double dz) {
@@ -319,7 +320,7 @@ public class Pave implements Objet3D, Serializable {
 	
 	
 	/**
-	 * Affiche les attributs du cube dans la console
+	 * Affiche les attributs du pave dans la console
 	 */
 	@Override
 	public String toString() {

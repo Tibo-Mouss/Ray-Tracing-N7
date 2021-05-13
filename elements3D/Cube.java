@@ -22,7 +22,7 @@ public class Cube implements Objet3D, Serializable {
 	private static final long serialVersionUID = 5907153455163217165L;
 	private static int compteur = 0; // compteur pour les noms par défaut
 
-	/** Ensembles des proprietes du plan.*/
+	/** Ensembles des proprietes du cube.*/
 	private Properties properties;
 	
 	/** Nom du plan */
@@ -103,8 +103,8 @@ public class Cube implements Objet3D, Serializable {
 	
 	/**
 	 * Retourne la normale au point d'impact et aussi son sens grace au rayon
-	 * @param impact : Point d'impact du rayon qui appartient au plan
-	 * @param rayon : rayon qui va peruter le plan
+	 * @param impact : Point d'impact du rayon qui appartient au cube
+	 * @param rayon : rayon qui va peruter le cube
 	 */
 	@Override
 	public Vecteur getNormal(Point impact, Rayon rayon) {
@@ -125,8 +125,8 @@ public class Cube implements Objet3D, Serializable {
 	 * 
 	 * On deduit la face qui est en jeu. Et paf ça fait des chocapics
 	 * 
-	 * @param impact : Point d'impact du rayon qui appartient au plan
-	 * @param rayon : rayon qui va percuter le plan
+	 * @param impact : Point d'impact du rayon qui appartient au cube
+	 * @param rayon : rayon qui va percuter le cube
 	 * @param lumiere : Lumiere de la scene
 	 **/
 	@Override
