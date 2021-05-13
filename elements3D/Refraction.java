@@ -47,6 +47,11 @@ public class Refraction implements Propriete, Serializable {
 		this.on = on;
 	}
 	
+	@Override
+	public double getEnergie() {
+		return this.energie;
+	}
+	
 	public void setIndice(double indice) {
 		assert (1 <= indice);
 		this.indice_refraction = indice;
@@ -66,7 +71,7 @@ public class Refraction implements Propriete, Serializable {
 		assert (rayon != null && intersection != null && objetIntersection != null);
 		Vecteur direction = objetIntersection.directionReflexion(rayon, intersection);
 		ArrayList<Rayon> listeRayons = new ArrayList<Rayon>();
-		listeRayons.add( new Rayon(direction, intersection, rayon, this.intensite, rayon.getPartEnergie()) );
+		listeRayons.add( new Rayon(direction, intersection, rayon, this.intensite, energie*rayon.getPartEnergie()) );
 				// partEnergie à modifier 
 		return listeRayons;
 	}

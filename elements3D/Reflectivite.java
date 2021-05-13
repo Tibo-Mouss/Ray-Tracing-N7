@@ -19,12 +19,14 @@ public class Reflectivite implements Propriete, Serializable {
 	private static final long serialVersionUID = 4874702146396229178L;
 	
 	private double intensite; // entre 0 et 1 (1 = réfléchit tout)
+	private double energie;
 	private boolean on;
 	
 	Reflectivite(double reflectivite, boolean on) {
 		assert (0 <= reflectivite  && reflectivite <= 1);
 		this.intensite = reflectivite;
 		this.on = on;
+		this.energie = 0;
 	}
 	
 	@Override
@@ -39,6 +41,12 @@ public class Reflectivite implements Propriete, Serializable {
 
 	}
 	
+	@Override
+	public double getEnergie() {
+		return this.energie;
+	}
+	
+	@Override
 	public void setOn(boolean on) {
 		this.on = on;
 	}
@@ -46,12 +54,16 @@ public class Reflectivite implements Propriete, Serializable {
 	public void setIntensite(double intensite) {
 		this.intensite = intensite;
 	}
+	
+	public void setEnergie(double energie) {
+		this.energie = energie;
+	}
 
 	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection) {
 		assert (rayon != null && intersection != null && objetIntersection != null);
 		Vecteur direction = objetIntersection.directionReflexion(rayon, intersection);
 		ArrayList<Rayon> listeRayons = new ArrayList<Rayon>();
-		listeRayons.add( new Rayon(direction, intersection, rayon, this.intensite, rayon.getPartEnergie()) );
+		listeRayons.add( new Rayon(direction, intersection, rayon, this.intensite, energie*rayon.getPartEnergie()) );
 				// partEnergie à modifier 
 		return listeRayons;
 	}

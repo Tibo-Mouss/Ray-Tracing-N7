@@ -22,6 +22,12 @@ public interface Propriete {
 	 */
 	public void reset();
 	
+	public void setOn(boolean on);
+	
+	public void setEnergie(double energie);
+	
+	public double getEnergie();
+	
 	/** Créer les rayons fils issus de la collision un objet. */
 	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection);
 }
