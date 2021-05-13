@@ -98,7 +98,7 @@ public class RayTracing {
 	private static void setCouleurRayon(Rayon rayon, Color couleur) {
 		
 		double pC = rayon.getPartCouleur();
-		double r = Math.min( rayon.getCouleur().getRed(), pC * couleur.getRed());
+		double r = Math.min(rayon.getCouleur().getRed(), pC * couleur.getRed());
 		double g = Math.min( rayon.getCouleur().getGreen(), pC * couleur.getGreen());
 		double b = Math.min( rayon.getCouleur().getBlue(), pC * couleur.getBlue());
 		rayon.setCouleur((int)r, (int)g, (int)b);
@@ -261,7 +261,7 @@ public class RayTracing {
 		List<Lumiere> listeLumieres=  this.scene.getLumiere();
 		int nbLumieres = listeLumieres.size();
 		int nbObjets = this.scene.getObjet3D().size();
-		double shadding;
+		double shading;
 
 		// On parcourt toutes les lumières
 		for (int lumiere = 0 ; lumiere < nbLumieres ; lumiere++) {
@@ -304,18 +304,22 @@ public class RayTracing {
 				if (this.shaddingisOn) {
 					vecteurLumiere.normaliser();
 					normal.normaliser();
-					shadding = Math.max(0.0, normal.produitScalaire(vecteurLumiere));
+					shading = Math.max(0.0, normal.produitScalaire(vecteurLumiere));
 				
 				} else {
-					shadding = 1;
+					shading = 1;
 				}
 				
 				// mise à jour de la couleur du rayon
 				couleurRayon = rayon.getCouleur();
 				
-				double nr = Math.min(shadding*couleurLumiereCourante.getRed(), couleurIntersection.getRed());				
-				double ng = Math.min(Math.floor(shadding*couleurLumiereCourante.getGreen()), couleurIntersection.getGreen());
-				double nb = Math.min(Math.floor(shadding*couleurLumiereCourante.getBlue()), couleurIntersection.getBlue());
+				double distance = intersectionObjet.distance(lumiereCourante.getCentre());
+				
+				double i = 1; //100/(distance*distance);
+				
+				double nr = Math.min(i*shading*couleurLumiereCourante.getRed(), couleurIntersection.getRed());				
+				double ng = Math.min(i*shading*couleurLumiereCourante.getGreen(), couleurIntersection.getGreen());
+				double nb = Math.min(i*shading*couleurLumiereCourante.getBlue(), couleurIntersection.getBlue());
 				
 				double ar = couleurCourante.getRed();
 				double ag = couleurCourante.getGreen();
@@ -325,6 +329,8 @@ public class RayTracing {
 				double r = Math.max(nr, ar);
 				double g = Math.max(ng, ag);
 				double b = Math.max(nb, ab);
+				
+				System.out.println(shading);
 				
 				
 				couleurCourante = new Color((int)r, (int)g, (int)b);

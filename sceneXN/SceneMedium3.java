@@ -24,18 +24,18 @@ public class SceneMedium3 {
 		
 	try {
 		// Création de la scène
-	    Scene scene = new Scene(300);
+	    Scene scene = new Scene(3000);
 	    scene.setCouleur(Color.white);
 	    
 	    	// Ajout d'une sphère
 	    Sphere sphere1 = new Sphere(new Point(5,0,5), 2.5, "Sphere1");
 	    Couleur couleur1 = (Couleur)sphere1.getMateriau(0);
-	    couleur1.set(0, 0, 0);
+	    couleur1.set(255, 255, 255);
 	    Reflectivite reflectivite1 = (Reflectivite)sphere1.getMateriau(1);
 	    reflectivite1.setOn(true);
 	    reflectivite1.setIntensite(1);
-	    reflectivite1.setEnergie(0.5);
-	    sphere1.getMateriau().setEnergieReflexion(0.5);
+	    reflectivite1.setEnergie(1);
+	    sphere1.getMateriau().setEnergieReflexion(1);
 	    scene.addObjet3D(sphere1);
 	    
 	    	// Ajout d'une sphère
@@ -62,7 +62,7 @@ public class SceneMedium3 {
 	    couleur4.set(0, 255, 255);
 	    Reflectivite reflectivite4 = (Reflectivite)sphere4.getMateriau(1);
 	    reflectivite4.setOn(true);
-	    reflectivite4.setIntensite(0.5);
+	    reflectivite4.setIntensite(1);
 	    reflectivite4.setEnergie(1);
 	    scene.addObjet3D(sphere4);
 	    
