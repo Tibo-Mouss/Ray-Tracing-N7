@@ -17,7 +17,7 @@ import rayTracing.Lumiere;
  *
  */
 
-public class Pyramide_Circulaire implements Objet3D, Serializable {
+public class Cone implements Objet3D, Serializable {
 	
 	
 	private static final long serialVersionUID = -789255897531917008L;
@@ -46,12 +46,12 @@ public class Pyramide_Circulaire implements Objet3D, Serializable {
 	private Plan planCercle;
 	
 
-	public Pyramide_Circulaire(Point centreBase, Vecteur VHaut, double hauteur, double rayon, String nom) {
+	public Cone(Point centreBase, Vecteur VHaut, double hauteur, double rayon, String nom) {
 		this.properties = new Properties();
 		this.nom = nom;
 		
 		this.centreBase = centreBase.copie();
-		this.planCercle = new Plan(this.VHaut, this.centreBase, "Plan associe a la base du cercle");
+		this.planCercle = new Plan(VHaut, centreBase, "Plan associe a la base du cercle");
 		
 		this.VHaut = VHaut.copie();
 		this.VHaut.normaliser();
@@ -60,7 +60,7 @@ public class Pyramide_Circulaire implements Objet3D, Serializable {
 		this.rayon = rayon;
 	}
 	
-	public Pyramide_Circulaire(Point centre_base, Vecteur VHaut, double hauteur, double rayon) {
+	public Cone(Point centre_base, Vecteur VHaut, double hauteur, double rayon) {
 		this(centre_base, VHaut, hauteur, rayon, "Pyramide" + ++compteur);
 	}
 	
@@ -99,7 +99,9 @@ public class Pyramide_Circulaire implements Objet3D, Serializable {
 		} else if( indice == 1) {
 			return this.planCercle.getNormal(impact, rayon);
 		} else if( indice == 2) {
-			//TODO
+			Vecteur normale = new Vecteur(this.centreBase, impact);
+			normale.retirerProjection(VHaut);
+			return normale;
 		}
 		
 		return null;
@@ -139,8 +141,8 @@ public class Pyramide_Circulaire implements Objet3D, Serializable {
 	//----------------------------------------------------------------------
 	//Autres methodes
 
-	/**
-	 * Determine si la pyramide est traverse par un rayon et son premier point d'impact
+	/** https://www.geometrictools.com/Documentation/IntersectionLineCone.pdf
+	 * Determine si la pyramide est traversee par un rayon et son premier point d'impact
 	 * (il y en aura presque toujours deux)
 	 * @param r : rayon
 	 */
@@ -155,9 +157,82 @@ public class Pyramide_Circulaire implements Objet3D, Serializable {
 		}
 		
 		//Test si il traverse le reste
-		//TODO
+		Vecteur D = this.VHaut.multiplication(-1);
+		Vecteur U = r.getDirection();
+		double gamma = this.hauteur / Math.sqrt(this.hauteur*this.hauteur + this.rayon*this.rayon);
+		Point P = r.getOrigine();
+		Point V = this.centreBase.copie();
+		V.translater(VHaut.multiplication(hauteur));
+		Vecteur delta = new Vecteur(V,P);
+		double c2 = Math.pow(D.produitScalaire(U), 2) - gamma * gamma * U.produitScalaire(U);
+		double c1 = (D.produitScalaire(U))*(D.produitScalaire(delta)) - gamma*gamma * U.produitScalaire(delta);
+		double c0 = Math.pow(D.produitScalaire(delta), 2) - gamma*gamma * delta.produitScalaire(delta);
 		
-		return null;
+		double t1 = 0;
+		double t2 = 0;
+		
+		if (Math.abs(c2) > Objet3D.EPSILON) {
+			double petitDelta = c1*c1 - c0*c2;
+			if (petitDelta > 0) {
+				//Cela veut dire que le rayon intersecte bien le double-sided cone
+				t1 = -c1 + Math.sqrt(petitDelta)/c2;
+				t2 = -c1 - Math.sqrt(petitDelta)/c2;
+			}
+		} else if (Math.abs(c2) < Objet3D.EPSILON & Math.abs(c1) > Objet3D.EPSILON) {
+			t1 = -c0 / (2*c1);
+			t2 = t1;
+		} else if (Math.abs(c2) < Objet3D.EPSILON & Math.abs(c1) < Objet3D.EPSILON) {
+			if (Math.abs(c0) < Objet3D.EPSILON) {
+				//System.out.println("Rayon se confond avec le cote du cone");
+			}
+		}
+		
+		if (t1 < 0 | t2 < 0) {
+			System.out.println("t1 ou t2 est negatif chef : "+t1+"   "+t2);
+		}
+		
+		Point point1 = null;
+		if (t1 > Objet3D.EPSILON) {
+			point1 = r.getOrigine();
+			point1.translater(r.getDirection().multiplication(t1));
+			if (appartientPyramide(point1) != 2) {
+				point1 = null;
+			}
+		}
+		
+		Point point2 = null;
+		if (t2 > Objet3D.EPSILON) {
+			point2 = r.getOrigine();
+			point2.translater(r.getDirection().multiplication(t2));
+			if (appartientPyramide(point2) != 2) {
+				point2 = null;
+			}
+		}
+			
+		//J'ai tous les points, il faut donc tester lequel est le plus proche de l'origine
+		double distanceMin = 0;
+		Point lePlusProche = null;
+		if (impactBase != null) {
+			double distanceBase = impactBase.distance(r.getOrigine());
+			lePlusProche = impactBase;
+			distanceMin = distanceBase;
+		}
+		if (point1 != null) {
+			double distancep1 = point1.distance(r.getOrigine());
+			if (distanceMin < Objet3D.EPSILON | distanceMin > distancep1) {
+				lePlusProche = point1;
+				distanceMin = distancep1;
+			}
+		}
+		if (point2 != null) {
+			double distancep2 = point2.distance(r.getOrigine());
+			if (distanceMin < Objet3D.EPSILON | distanceMin > distancep2) {
+				lePlusProche = point2;
+				distanceMin = distancep2;
+			}
+		}
+		
+		return lePlusProche;
 	}
 
 	/** Determine la direction et sens du rayon reflechi contre la pyramide au point d'impact p
