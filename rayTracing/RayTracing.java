@@ -183,7 +183,7 @@ public class RayTracing {
 		if (objetIntersection != null && intersection != null) {
 
 			Couleur couleurObjetInt = (Couleur)objetIntersection.getMateriau(0);
-			Color couleurOI = new Color(couleurObjetInt.getRed(), couleurObjetInt.getGreen(), couleurObjetInt.getBlue());
+			Color couleurOI = couleurObjetInt.get();
 
 			//!\\ ne marche que pour maxRebonds = 0 -> setCouleur à modifier ? ou ajoouter une fonction et un pourcentage
 			//ajouter un attribut pourcentage ;  modifier setCouleur() dans Rayon ; dans le constructeur : pourcentage = 1 
