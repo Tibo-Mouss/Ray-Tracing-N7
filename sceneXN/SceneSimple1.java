@@ -16,7 +16,6 @@ import rayTracing .*;
 public class SceneSimple1 {
 
 	public static void main(String args[]) {
-		
 		// Création de la scène
 		Scene scene = new Scene(300);
 		scene.setCouleur(Color.WHITE);
@@ -24,7 +23,7 @@ public class SceneSimple1 {
 			// Ajout d'un cube
 		Cube cube = new Cube(new Point(0,0,0), 4, "Cube");
 	    Couleur couleur = (Couleur)cube.getMateriau(0);
-		couleur.set(255, 0, 0);
+		couleur.set(0, 255, 0);
 		try {
 			scene.addObjet3D(cube);
 		} catch (Objet3DHorsSceneException e) {
@@ -58,6 +57,6 @@ public class SceneSimple1 {
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
 		camera.sauvegarderImage(img, "test_simple1");
-		System.out.println("Rendu d'image termine");
+		System.out.println("Rendu d'image termine");		
 	}
 }

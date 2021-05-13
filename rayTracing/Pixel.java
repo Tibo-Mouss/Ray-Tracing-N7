@@ -28,7 +28,7 @@ public class Pixel {
 	}
 	
 	public void setCouleur (Color ncouleur) {
-		assert ncouleur != null;
+		assert ( ncouleur != null );
 		this.couleur = ncouleur; 
 	}
 	

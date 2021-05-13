@@ -5,6 +5,7 @@ package elements3D;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import rayTracing.Rayon;
 import utilitaire.Point;
@@ -14,7 +15,7 @@ import utilitaire.Point;
  * @author Edgar
  *
  */
-public class Couleur implements Materiau, Serializable {
+public class Couleur implements Propriete, Serializable {
 	
 	private static final long serialVersionUID = 1341431705338909785L;
 
@@ -103,8 +104,25 @@ public class Couleur implements Materiau, Serializable {
 	}
 
 	@Override
-	public Rayon lancerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection) {
+	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection) {
 		return null;
+	}
+
+	@Override
+	public void setOn(boolean on) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setEnergie(double energie) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getEnergie() {
+		return 0;
 	}
 
 }

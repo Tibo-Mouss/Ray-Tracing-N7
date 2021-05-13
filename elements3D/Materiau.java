@@ -1,27 +1,95 @@
 /**
- * 
+ *  
  */
 package elements3D;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 import rayTracing .*;
 import utilitaire .*;
 
-/** Materiau représente le type général de n'importe quel matériau des objets 3D
+/** Properties regroupe l'ensemble des Matériaux en une classe 
+ * qui stocke les propriétés de chaque Objet3D.
  * @author Edgar
  */
-public interface Materiau {
-		
-	/** Indiquer si le matériau d'un objet est à prendre en compte
-	 * @return statut du matériau
-	 */
-	public boolean isOn();
+public class Materiau implements Serializable {
 	
-	/** Réinitialise le matériau à ses valeurs par défaut
-	 */
-	public void reset();
+	private static final long serialVersionUID = 385803258376068043L;
+
+	// nombre de matériaux implémentés jusqu'alors
+	public static final int NB_PROPRIETES = 3; 
 	
-	/** Créer les rayons fils issus de la collision un objet. */
-	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection);
+	/** Liste de l'ensemble des matériaux que nous avons choisi de pouvoir 
+	 * traiter dans notre application*/
+	private Propriete[] proprietes = new Propriete[NB_PROPRIETES];
+	
+	/** Créer l'ensemble des propriétés d'un objet et initialiser chacune.*/
+	public Materiau() {
+		this.proprietes[0] = new Couleur();
+		this.proprietes[1] = new Reflectivite(1, false);
+		this.proprietes[2] = new Refraction(1, 1, false);
+		// Ajouter ici l'initialisation d'un nouveau type de matériau
+	}
+	
+	/** Obtenir un matériau contenant des informations sur l'objet
+	 * @param num identificateur de matériau
+	 * @return matériau demandé de l'objet
+	 */
+	public Propriete getMateriau(int num) {
+		return this.proprietes[num];
+	}
+
+	public void setOnReflectivite() {
+		Propriete re = this.proprietes[0];
+		Propriete ra = this.proprietes[1];
+		re.setOn(true);
+		if (ra.isOn()) {
+			re.setEnergie(0.5);
+			ra.setEnergie(0.5);
+		} else {
+			re.setEnergie(1);
+		}
+	}
+	
+	public void setOnRefraction() {
+		Propriete re = this.proprietes[0];
+		Propriete ra = this.proprietes[1];
+		ra.setOn(true);
+		if (re.isOn()) {
+			re.setEnergie(0.5);
+			ra.setEnergie(0.5);
+		} else {
+			ra.setEnergie(1);
+		}
+	}
+	
+	public void setOffReflectivite() {
+		this.proprietes[0].setOn(false);
+	}
+	
+	public void setOffRefraction() {
+		this.proprietes[1].setOn(false);
+	}
+	
+	public void setEnergieRefraction(double energie) {
+		Propriete re = this.proprietes[0];
+		Propriete ra = this.proprietes[1];
+		double energie_reflexion = re.getEnergie();
+		if (energie_reflexion + energie <= 1) {
+			ra.setEnergie(energie);
+		} //Rajouter le else avec une erreur
+
+	}
+	
+	public void setEnergieReflexion(double energie) {
+		Propriete re = this.proprietes[0];
+		Propriete ra = this.proprietes[1];
+		double energie_refraction = ra.getEnergie();
+		if (energie_refraction + energie <= 1) {
+			System.out.println(re.getEnergie());
+			re.setEnergie(energie);
+		} //Rajouter le else avec une erreur
+	}
+
+	
 }

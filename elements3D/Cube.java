@@ -23,7 +23,7 @@ public class Cube implements Objet3D, Serializable {
 	private static int compteur = 0; // compteur pour les noms par défaut
 
 	/** Ensembles des proprietes du plan.*/
-	private Properties properties;
+	private Materiau properties;
 	
 	/** Nom du plan */
 	private String nom;
@@ -39,7 +39,7 @@ public class Cube implements Objet3D, Serializable {
 	private ArrayList<Plan> plans;
 
 	public Cube(Point centre, double arete , String nom) {
-		this.properties = new Properties();
+		this.properties = new Materiau();
 		this.nom = nom;
 		
 		this.arete = arete;
@@ -82,8 +82,8 @@ public class Cube implements Objet3D, Serializable {
 	// Methodes get
 	
 	@Override
-	public Materiau getMateriau(int num) {
-		assert 0 <= num && num < Properties.NB_MATERIAUX;
+	public Propriete getMateriau(int num) {
+		assert 0 <= num && num < Materiau.NB_PROPRIETES;
 		return this.properties.getMateriau(num);
 	}
 	

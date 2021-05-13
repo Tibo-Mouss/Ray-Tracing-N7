@@ -14,7 +14,7 @@ import utilitaire.Vecteur;
 public class SceneSimple3 {
 
 	public static void main(String args[]) {
-		
+		try {
 		// Création de la scène
 		Scene scene = new Scene(300);
 		
@@ -50,5 +50,8 @@ public class SceneSimple3 {
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
 		camera.sauvegarderImage(img, "test_simple3");
+		} catch (Exception e) {
+			System.out.println("Erreur dans la gestion de la scène");
+		}
 	}
 }

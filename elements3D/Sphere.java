@@ -22,7 +22,7 @@ public class Sphere implements Objet3D, Serializable {
 	private static int compteur = 0; // compteur pour les noms par défaut
 	
 	/** Ensembles des proprietes de la sphere.*/
-	private Properties properties;
+	private Materiau properties;
 	
 	/** Nom de la sphère */
 	private String nom;
@@ -46,7 +46,7 @@ public class Sphere implements Objet3D, Serializable {
 		double z = origine.getZ();
 		this.origine = new Point(x, y, z);
 		this.rayon = rayon;
-		this.properties = new Properties();
+		this.properties = new Materiau();
 		this.nom = nom;
 	}
 	
@@ -119,6 +119,10 @@ public class Sphere implements Objet3D, Serializable {
 		}
 	}
 	
+	public Materiau getMateriau() {
+		return this.properties;
+	}
+	
 	public double getRayon() {
 		return this.rayon;
 	}
@@ -159,8 +163,8 @@ public class Sphere implements Objet3D, Serializable {
 	}
 
 	@Override
-	public Materiau getMateriau(int num) {
-		assert 0 <= num && num < Properties.NB_MATERIAUX;
+	public Propriete getMateriau(int num) {
+		assert 0 <= num && num < Materiau.NB_PROPRIETES;
 		return this.properties.getMateriau(num);
 	}
 

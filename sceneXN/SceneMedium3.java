@@ -22,17 +22,20 @@ import utilitaire.Vecteur;
 public class SceneMedium3 {
 	public static void main(String args[]) {
 		
+	try {
 		// Création de la scène
-	    Scene scene = new Scene(300);
+	    Scene scene = new Scene(3000);
 	    scene.setCouleur(Color.white);
 	    
 	    	// Ajout d'une sphère
 	    Sphere sphere1 = new Sphere(new Point(5,0,5), 2.5, "Sphere1");
 	    Couleur couleur1 = (Couleur)sphere1.getMateriau(0);
-	    couleur1.set(0, 255, 0);
+	    couleur1.set(255, 255, 255);
 	    Reflectivite reflectivite1 = (Reflectivite)sphere1.getMateriau(1);
 	    reflectivite1.setOn(true);
 	    reflectivite1.setIntensite(1);
+	    reflectivite1.setEnergie(1);
+	    sphere1.getMateriau().setEnergieReflexion(1);
 	    scene.addObjet3D(sphere1);
 	    
 	    	// Ajout d'une sphère
@@ -59,7 +62,8 @@ public class SceneMedium3 {
 	    couleur4.set(0, 255, 255);
 	    Reflectivite reflectivite4 = (Reflectivite)sphere4.getMateriau(1);
 	    reflectivite4.setOn(true);
-	    reflectivite1.setIntensite(0.5);
+	    reflectivite4.setIntensite(1);
+	    reflectivite4.setEnergie(1);
 	    scene.addObjet3D(sphere4);
 	    
 	    	// Ajout d'un plan
@@ -82,11 +86,14 @@ public class SceneMedium3 {
 	    Camera camera = new Camera(new Point(20,0,5),new Vecteur(-10,0,0),1000,1000,new Vecteur(0,0,2)); //vHaut = (0,0,10) sur l'exemple geogebra
 		
 	    // Lancement du ray tracing
-		RayTracing raytracing = new RayTracing(scene, camera, 3, true, true);
+		RayTracing raytracing = new RayTracing(scene, camera, 10, true, true);
 		raytracing.lancerRayTracing();
 		
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
 		camera.sauvegarderImage(img, "test3bis");
+	} catch (Exception e) {
+		System.out.println("Erreur dans la gestion de la scène.");
+	}
 	}
 }
