@@ -76,8 +76,11 @@ public class RayTracing {
 		Color couleurFinale = Color.black;
 		double pE;
 		double r, g, b;
-		for (rayon in listeRayonsFinaux) {
-			pE = rayon.getPartEnergie;
+		int tailleListeRayons = listeRayonsFinaux.size();
+		Rayon rayon;
+		for (int i = 0; i < tailleListeRayons; i++) {
+			rayon = listeRayonsFinaux.get(i);
+			pE = rayon.getPartEnergie();
 			r = Math.max(couleurFinale.getRed(), pE * rayon.getCouleur().getRed());
 			g = Math.max(couleurFinale.getGreen(), pE * rayon.getCouleur().getGreen());
 			b = Math.max(couleurFinale.getBlue(), pE * rayon.getCouleur().getBlue());
