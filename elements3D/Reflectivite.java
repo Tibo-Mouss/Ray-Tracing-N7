@@ -57,6 +57,7 @@ public class Reflectivite implements Propriete, Serializable {
 	
 	public void setEnergie(double energie) {
 		this.energie = energie;
+		System.out.println(this.energie);
 	}
 
 	public ArrayList<Rayon> creerRayon(Rayon rayon, Point intersection, Objet3D objetIntersection) {

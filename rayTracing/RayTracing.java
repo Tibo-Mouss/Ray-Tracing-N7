@@ -85,6 +85,7 @@ public class RayTracing {
 			g = Math.max(couleurFinale.getGreen(), pE * rayon.getCouleur().getGreen());
 			b = Math.max(couleurFinale.getBlue(), pE * rayon.getCouleur().getBlue());
 			couleurFinale = new Color((int)r,(int)g,(int)b);
+			//System.out.println(pE);
 		}
 		return couleurFinale;
 	}

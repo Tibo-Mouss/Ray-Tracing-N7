@@ -86,9 +86,9 @@ public class Materiau implements Serializable {
 		Propriete ra = this.proprietes[1];
 		double energie_refraction = ra.getEnergie();
 		if (energie_refraction + energie <= 1) {
+			System.out.println(re.getEnergie());
 			re.setEnergie(energie);
 		} //Rajouter le else avec une erreur
-
 	}
 
 	

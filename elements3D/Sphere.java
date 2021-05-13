@@ -119,6 +119,10 @@ public class Sphere implements Objet3D, Serializable {
 		}
 	}
 	
+	public Materiau getMateriau() {
+		return this.properties;
+	}
+	
 	public double getRayon() {
 		return this.rayon;
 	}
