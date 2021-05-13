@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import elements3D.Couleur;
 import elements3D.Cube;
 import elements3D.Sphere;
+import elements3D.Cone;
 import exception.LumiereHorsSceneException;
 import exception.MaxRebondsNegatifException;
 import exception.Objet3DHorsSceneException;
@@ -21,7 +22,7 @@ public class SceneSimple1 {
 		scene.setCouleur(Color.WHITE);
 		
 			// Ajout d'un cube
-		Cube cube = new Cube(new Point(0,0,0), 4, "Cube");
+		Cone cube = new Cone(new Point(0,0,0), new Vecteur(0,0,1), 5, 2, "Cone");
 	    Couleur couleur = (Couleur)cube.getMateriau(0);
 		couleur.set(0, 255, 0);
 		try {
@@ -39,7 +40,7 @@ public class SceneSimple1 {
 		}
 		
 		// Création de la caméra
-		Camera camera = new Camera(new Point(-15,7,8),new Vecteur(10, -7, -8),500,500,new Vecteur(0,0,10));
+		Camera camera = new Camera(new Point(-15,7,-8),new Vecteur(10, -7, 8),500,500,new Vecteur(0,0,10));
 		camera.printVecteursIterateurs();
 		camera.printCoinsFenetre();
 		
@@ -47,7 +48,7 @@ public class SceneSimple1 {
 		// Lancement du ray tracing
 		RayTracing raytracing;
 		try {
-			raytracing = new RayTracing(scene, camera, 10, true,true);
+			raytracing = new RayTracing(scene, camera, 10, true,false);
 			raytracing.lancerRayTracing();
 		} catch (MaxRebondsNegatifException e) {
 			e.printStackTrace();
