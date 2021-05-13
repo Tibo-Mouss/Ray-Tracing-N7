@@ -17,7 +17,7 @@ public class Materiau implements Serializable {
 	private static final long serialVersionUID = 385803258376068043L;
 
 	// nombre de matériaux implémentés jusqu'alors
-	public static final int NB_PROPRIETES = 2; 
+	public static final int NB_PROPRIETES = 3; 
 	
 	/** Liste de l'ensemble des matériaux que nous avons choisi de pouvoir 
 	 * traiter dans notre application*/
@@ -25,8 +25,9 @@ public class Materiau implements Serializable {
 	
 	/** Créer l'ensemble des propriétés d'un objet et initialiser chacune.*/
 	public Materiau() {
-		this.proprietes[0] = new Reflectivite(1, false);
-		this.proprietes[1] = new Refraction(1, 1, false);
+		this.proprietes[0] = new Couleur();
+		this.proprietes[1] = new Reflectivite(1, false);
+		this.proprietes[2] = new Refraction(1, 1, false);
 		// Ajouter ici l'initialisation d'un nouveau type de matériau
 	}
 	
