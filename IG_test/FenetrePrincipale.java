@@ -290,7 +290,7 @@ public class FenetrePrincipale {
 	public class ActionEnregistrerS implements ActionListener {
 		
 		public void actionPerformed(ActionEvent ev) {
-			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scï¿½ne", rayTracing);
+			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scène", rayTracing);
 			enregistrer.setVisible(true);
 			
 		}
@@ -299,9 +299,9 @@ public class FenetrePrincipale {
 	public class ActionLancerCalcul implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
 			rayTracing.lancerRayTracing();
-			System.out.printf("Calcul lancï¿½ ...\n");
+			System.out.printf("Calcul lancé ...\n");
 			imageRT.setIcon(new ImageIcon(rayTracing.getCamera().creerImage()));
-			System.out.printf("Calcul Terminï¿½ \n");
+			System.out.printf("Calcul Terminé \n");
 		}
 	}
 	

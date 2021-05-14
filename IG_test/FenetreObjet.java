@@ -24,6 +24,11 @@ import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import java.awt.Panel;
+import java.awt.Font;
+import java.awt.TextField;
 public class FenetreObjet extends JFrame {
 
 private static final long serialVersionUID = 1L;
@@ -34,33 +39,47 @@ private static final long serialVersionUID = 1L;
     private JButton ajouter;
 	private ListeObjets listeO;
 	private JList<Objet> grilleO;
-	private JTextField dimen;
-	private JTextField x;
-	private JTextField y;
-	private JTextField z;
-	private JTextField ref;
+	private JSpinner dimen;
+	private JSpinner x;
+	private JSpinner y;
+	private JSpinner z;
 	private Color mycolor;
 	private JColorChooser jcc;
 	private JFrame jf;
+	private JTextField rouge;
+	private JTextField vert;
+	private JTextField bleu;
+	private JPanel couleurChoisi;
+	private TextField nom;
+	private String forme[] = {"Spère", "Cube","Cone"};
+	private JComboBox formeO = new JComboBox(forme);
 	
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public FenetreObjet (RayTracing rayTracing,ListeObjets oL,JList<Objet> L) {
 		super("Ajouter Objet");
+		setAutoRequestFocus(false);
 		this.rayTracing = rayTracing;
-	    this.listeO = oL;
+	    this.listeO = oL; 
 	    this.grilleO = L;
-	    this.dimen = new JTextField();
-	    this.x = new JTextField();
-	    this.y = new JTextField();
-	    this.z = new JTextField();
-	    this.ref = new JTextField(); 
-	    this.ajouter = new JButton("Ajouter");   
-	    ajouter.addActionListener(new ActionAjouterObjet());
+	    
+	    this.x= new JSpinner();
+		this.y= new JSpinner();
+		this.z= new JSpinner();
+		
+		this.rouge = new JTextField();
+		this.vert = new JTextField();
+		this.bleu = new JTextField();
+		
+		this.couleurChoisi = new JPanel();
+		
 	    initialise();
 	}
 	private void initialise() {
 		jf = new JFrame("objet");
-		this.setSize(1000, 1000);
+		this.setSize(758, 543);
 	    this.setLocation(100, 100);
 	    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    
@@ -68,205 +87,266 @@ private static final long serialVersionUID = 1L;
 	    setJMenuBar(menuBar);
 	    
 	    JMenu menu = new JMenu("Fichier");
+	    menu.setBackground(new Color(30, 144, 255));
 	    menuBar.add(menu);
 	    
 	    JMenuItem mntmNewMenuItem = new JMenuItem("Enregistrer objet");
+	    mntmNewMenuItem.setBackground(new Color(30, 144, 255));
 	    menu.add(mntmNewMenuItem);
 	    
 	    JMenuItem mntmNewMenuItem_1 = new JMenuItem("Ouvrir");
+	    mntmNewMenuItem_1.setBackground(new Color(30, 144, 255));
 	    menu.add(mntmNewMenuItem_1);
 	    
 	    JMenuItem mntmNewMenuItem_2 = new JMenuItem("Aide");
+	    mntmNewMenuItem_2.setBackground(new Color(30, 144, 255));
 	    menuBar.add(mntmNewMenuItem_2);
     
 	    
 	    Container maincontainer = this.getContentPane();
-		maincontainer.setLayout(new BorderLayout(0,0));
-		maincontainer.setBackground(Color.WHITE);
+		maincontainer.setBackground(new Color(135, 206, 250));
+		getContentPane().setLayout(null);
+		
+		
+		this.ajouter = new JButton("Ajouter");
+		ajouter.addActionListener(new ActionAjouterObjet());
+		
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setBounds(17, 426, 709, 40);
+		bottomPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		bottomPanel.setBackground(new Color(0, 0, 255));
+		bottomPanel.setLayout(new BorderLayout());
+		maincontainer.add(bottomPanel);
+		
+		JPanel basGauche = new JPanel();
+		basGauche.setBackground(new Color(0, 0, 255));
+		bottomPanel.add(basGauche, BorderLayout.WEST);
+		annuler.setBackground(new Color(30, 144, 255));
+		basGauche.add(annuler);
+		
+		JPanel basDroit = new JPanel();
+		basDroit.setBackground(new Color(0, 0, 255));
+		bottomPanel.add(basDroit, BorderLayout.EAST);
+		enregistrer.setBackground(new Color(30, 144, 255));
+		basDroit.add(enregistrer);
+		enregistrer.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+				ajouter.setBackground(new Color(30, 144, 255));
+				basDroit.add(ajouter);
+				
+						enregistrer.addActionListener(new ActionEnregistrer());
+						annuler.addActionListener(new ActionAnnuler());
 		
 		
 		JPanel leftPanel = new JPanel();
+		leftPanel.setBounds(17, 11, 355, 420);
 		leftPanel.setBorder(new LineBorder(Color.BLACK,1));
-		leftPanel.setBackground(Color.WHITE);
-		leftPanel.setLayout(new GridLayout(9,1,0,0));
-		maincontainer.add(leftPanel,BorderLayout.WEST);
-		
-		
-		JPanel rightPanel = new JPanel();
-		rightPanel.setBorder(new LineBorder(Color.BLACK,1));
-		rightPanel.setBackground(Color.WHITE);
-		rightPanel.setLayout(new BorderLayout());
-		maincontainer.add(rightPanel,BorderLayout.EAST);
-		
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBorder(new LineBorder(Color.BLACK,1));
-		bottomPanel.setBackground(Color.WHITE);
-		bottomPanel.setLayout(new BorderLayout());
-		maincontainer.add(bottomPanel,BorderLayout.SOUTH);
-	    
-		//dimension
-		JPanel dimension = new JPanel();
-		dimension.setBorder(new LineBorder(Color.BLACK,1));
-		dimension.setBackground(Color.WHITE);
-		dimension.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-		JLabel dimention = new JLabel("    Dimension:         ");
-		leftPanel.add(dimension);
-		dimension.add(dimention);
-		dimention.setHorizontalAlignment(JLabel.LEFT);
-		//JTextField dimen = new JTextField();
-       
-		dimen.setPreferredSize(new Dimension(100, 40));	
-		dimension.add(dimen);
-		
-		
-		//position
-		JPanel position = new JPanel();
-		position.setBorder(new LineBorder(Color.BLACK,1));
-		position.setBackground(Color.WHITE);
-		position.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-		JLabel lposition = new JLabel("    Position:   ");
-		JLabel xnom = new JLabel("      X:");
-		JLabel ynom = new JLabel("  Y:");
-		JLabel znom = new JLabel("  Z:");
-		leftPanel.add(position);
-		position.add(lposition);
-		//JTextField x= new JTextField();
-		//JTextField y= new JTextField();
-		//JTextField z= new JTextField();
-		x.setPreferredSize(new Dimension(30, 30));	
-		y.setPreferredSize(new Dimension(30, 30));	
-		z.setPreferredSize(new Dimension(30, 30));
-		position.add(xnom);
-		position.add(x);
-		position.add(ynom);
-		position.add(y);
-		position.add(znom);
-		position.add(z);
+		leftPanel.setBackground(new Color(0, 0, 255));
+		maincontainer.add(leftPanel);
+		leftPanel.setLayout(null);
+	    jcc = new JColorChooser();
 		
 		
 		//parametre de objet
 		JPanel objet = new JPanel();
-		objet.setBorder(new LineBorder(Color.BLACK,1));
-		objet.setBackground(Color.WHITE);
-		objet.setLayout(new GridLayout(1,1,0,0));
-		JLabel lobjet = new JLabel("    Parametre de Objet: ",JLabel.CENTER);
+		objet.setBounds(10, 11, 332, 216);
 		leftPanel.add(objet);
-		objet.add(lobjet);
+		objet.setBorder(new LineBorder(new Color(0, 255, 255), 1, true));
+		objet.setBackground(new Color(0, 191, 255));
+		objet.setLayout(null);
 		
-		 
-		//forme de objet
-		JPanel forme = new JPanel();
-		forme.setBorder(new LineBorder(Color.BLACK,1));
-		forme.setBackground(Color.WHITE);
-		forme.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 1));
-		JLabel lforme = new JLabel("    Forme: ",JLabel.LEFT);
-		JLabel image1 = new JLabel(new ImageIcon("IG_test/1.png"));
-		JLabel image2 = new JLabel(new ImageIcon("IG_test/2.png"));
-		JLabel image3 = new JLabel(new ImageIcon("IG_test/3.png"));
-		JLabel image4 = new JLabel(new ImageIcon("IG_test/4.png"));
-		JButton addObjet = new JButton ("+");
-		//image1.setBounds(20, 40, 20, 20);
-		//image2.setBounds(20, 40, 10, 10);
-		//image3.setBounds(20, 40, 10, 10);
-		//image4.setBounds(20, 40, 10, 10);
-		leftPanel.add(forme);
-		forme.add(lforme);
-		forme.add(image1);
-		forme.add(image2);
-		forme.add(image3);
-		forme.add(image4);
-		forme.add(addObjet);
+		// couleur
+		JPanel couleur = new JPanel();
+		couleur.setBounds(10, 120, 312, 85);
+		objet.add(couleur);
+		couleur.setBorder(new LineBorder(Color.BLACK,1));
+		couleur.setBackground(Color.WHITE);
+		couleur.setLayout(null);
+		//JTextField color= new JTextField();
+		//color.setPreferredSize(new Dimension(100, 40));
+		JButton color = new JButton("Choisir couleur");
+		color.setBackground(new Color(30, 144, 255));
+		color.setBounds(138, 51, 153, 23);
+		couleur.add(color);
+		JLabel lcouleur = new JLabel("Couleur:",JLabel.LEFT);
+		lcouleur.setBounds(10, 20, 67, 14);
+		couleur.add(lcouleur);
+		
+		
+		rouge.setBounds(128, 15, 48, 25);
+		couleur.add(rouge);
+		rouge.setColumns(10);	
+	
+		vert.setColumns(10);
+		vert.setBounds(186, 15, 48, 25);
+		couleur.add(vert);
+	
+		bleu.setColumns(10);
+		bleu.setBounds(243, 15, 48, 25);
+		couleur.add(bleu);
+		
+		couleurChoisi.setBorder(new LineBorder(new Color(0, 0, 0)));
+		couleurChoisi.setBounds(86, 15, 25, 25);
+		couleur.add(couleurChoisi);
+		couleurChoisi.setLayout(null);
+		
+		JLabel labelRouge = new JLabel("Rouge");
+		labelRouge.setHorizontalAlignment(SwingConstants.CENTER);
+		labelRouge.setBounds(127, 0, 49, 14);
+		couleur.add(labelRouge);
+		labelRouge.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		
+		JLabel labelVert = new JLabel("Vert");
+		labelVert.setHorizontalAlignment(SwingConstants.CENTER);
+		labelVert.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelVert.setBounds(185, 0, 49, 14);
+		couleur.add(labelVert);
+		
+		JLabel labelBleu = new JLabel("Bleu");
+		labelBleu.setHorizontalAlignment(SwingConstants.CENTER);
+		labelBleu.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelBleu.setBounds(242, 0, 49, 14);
+		couleur.add(labelBleu);
+		
+		
+		formeO.setEditable(true);
+		formeO.setToolTipText("Formes");
+		formeO.setBounds(10, 70, 312, 39);
+		objet.add(formeO);
+		this.nom = new TextField();
+		nom.setFont(new Font("Dialog", Font.PLAIN, 10));
 		
 		
 		//nom de objet
 		JPanel name = new JPanel();
+		name.setBounds(10, 23, 314, 36);
+		objet.add(name);
 		name.setBorder(new LineBorder(Color.BLACK,1));
 		name.setBackground(Color.WHITE);
-		name.setLayout(new GridLayout(1,4,0,0));
-		JLabel lname = new JLabel("      Nom: ",JLabel.LEFT);
-		leftPanel.add(name);
+		name.setLayout(null);
+		JLabel lname = new JLabel("Nom: ",JLabel.LEFT);
+		lname.setBounds(10, 6, 83, 20);
 		name.add(lname);
 		
-		//materiau de objet
-		JPanel materiau = new JPanel();
-		materiau.setBorder(new LineBorder(Color.BLACK,1));
-		materiau.setBackground(Color.WHITE);
-		materiau.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 1));
-		JLabel lmateriau = new JLabel("   Materiaus: ",JLabel.LEFT);
-		//JLabel mimage1 = new JLabel(new ImageIcon("/home/yliu6/1a/TOB/tps/KL-4/src/IG/5.png"));
-		//JLabel mimage2 = new JLabel(new ImageIcon("/home/yliu6/1a/TOB/tps/KL-4/src/IG/6.png"));
-		//JLabel mimage3 = new JLabel(new ImageIcon("/home/yliu6/1a/TOB/tps/KL-4/src/IG/7.png"));
-		JButton addMateriau = new JButton ("+");
-		//mimage1.setBounds(20, 40, 10, 10);
-		//mimage2.setBounds(20, 40, 10, 10);
-		//mimage3.setBounds(20, 40, 10, 10);
-		leftPanel.add(materiau);
-		materiau.add(lmateriau);
-		//materiau.add(mimage1);
-		//materiau.add(mimage2);
-		//materiau.add(mimage3);
-		materiau.add(addMateriau);
+		nom.setText("nouveauNom");
+		nom.setBounds(119, 6, 100, 25);
+		name.add(nom);
 		
 		//parametre de materiaus
 		JPanel materiaus = new JPanel();
-		materiaus.setBorder(new LineBorder(Color.BLACK,1));
-		materiaus.setBackground(Color.WHITE);
-		materiaus.setLayout(new GridLayout(1,1,0,0));
-		JLabel lmateriaus = new JLabel("     Parametre materiaus: ",SwingConstants.CENTER);
+		materiaus.setBounds(7, 238, 335, 165);
 		leftPanel.add(materiaus);
-		materiaus.add(lmateriaus);
+		materiaus.setBorder(new LineBorder(new Color(0, 255, 255)));
+		materiaus.setBackground(new Color(0, 191, 255));
+		materiaus.setLayout(null);
 		
 		
 		//Reflectivite de materiaus
 		JPanel reflectivite = new JPanel();
+		reflectivite.setBounds(10, 49, 315, 45);
+		materiaus.add(reflectivite);
 		reflectivite.setBorder(new LineBorder(Color.BLACK,1));
 		reflectivite.setBackground(Color.WHITE);
-		reflectivite.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
 		JLabel lreflectivite = new JLabel("Reflectivite:",JLabel.LEFT);
-		//JTextField ref= new JTextField();
-		ref.setPreferredSize(new Dimension(100, 40));
-		leftPanel.add(reflectivite);
+		lreflectivite.setBounds(10, 11, 81, 14);
+		reflectivite.setLayout(null);
 		reflectivite.add(lreflectivite);
-		reflectivite.add(ref); 
+		JLabel lobjet = new JLabel("Propri\u00E9t\u00E9 de Objet",JLabel.CENTER);
+		lobjet.setBounds(10, 11, 315, 27);
+		materiaus.add(lobjet);
 		
-		// couleur
-		JPanel couleur = new JPanel();
-		couleur.setBorder(new LineBorder(Color.BLACK,1));
-		couleur.setBackground(Color.WHITE);
-		couleur.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
-		JLabel lcouleur = new JLabel("    Couleur:          ",JLabel.LEFT);
-		//JTextField color= new JTextField();
-		//color.setPreferredSize(new Dimension(100, 40));
-		JButton color = new JButton("Choisir couleur");
-	    jcc = new JColorChooser();
+		JPanel reflectivite_1 = new JPanel();
+		reflectivite_1.setLayout(null);
+		reflectivite_1.setBorder(new LineBorder(Color.BLACK,1));
+		reflectivite_1.setBackground(Color.WHITE);
+		reflectivite_1.setBounds(10, 105, 315, 45);
+		materiaus.add(reflectivite_1);
 		
-		leftPanel.add(couleur);
-		couleur.add(lcouleur);
-		couleur.add(color);
+		JLabel lrefraction = new JLabel("R\u00E9fraction:", SwingConstants.LEFT);
+		lrefraction.setBounds(10, 11, 81, 14);
+		reflectivite_1.add(lrefraction);
+		color.addActionListener(new ActionCouleur());
 		
-		// trois buttons
-		JPanel buttons = new JPanel();
-		buttons.setBackground(Color.WHITE);
-		buttons.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
-		bottomPanel.add(buttons);
-		buttons.add(enregistrer);
-		buttons.add(annuler);
-		buttons.add(ajouter);
-		
-		ActionEnregistrer listener = new ActionEnregistrer();
-		enregistrer.addActionListener(listener);
-		
-		ActionAnnuler listener2 = new ActionAnnuler();
-		annuler.addActionListener(listener2);
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(0, 0, 255));
+		panel.setBounds(371, 301, 355, 130);
+		getContentPane().add(panel);
+		panel.setLayout(null);
 				
-		ActionAddobjet listener4 = new ActionAddobjet();
-		addObjet.addActionListener(listener4);
+				this.dimen = new JSpinner();
+				
+				JPanel parametreBase = new JPanel();
+				parametreBase.setBounds(10, 11, 332, 102);
+				panel.add(parametreBase);
+				parametreBase.setBorder(new LineBorder(new Color(0, 255, 255), 1, true));
+				parametreBase.setBackground(new Color(0, 191, 255));
+				parametreBase.setLayout(null);
+				
+				dimen.setBackground(new Color(30, 144, 255));
+				dimen.setBounds(120, 6, 100, 25);
+				
+				//dimension
+				JPanel dimension = new JPanel();
+				dimension.setBounds(10, 11, 314, 36);
+				parametreBase.add(dimension);
+				dimension.setBorder(new LineBorder(Color.BLACK,1));
+				dimension.setBackground(Color.WHITE);
+				JLabel dimention = new JLabel("Dimension:         ");
+				dimention.setBounds(11, 13, 99, 14);
+				dimension.setLayout(null);
+				dimension.add(dimention);
+				dimention.setHorizontalAlignment(JLabel.LEFT);
+				//JTextField dimen = new JTextField();
+       
+				dimen.setPreferredSize(new Dimension(100, 40));	
+				dimension.add(dimen);
+				this.x = new JSpinner();
+				x.setBackground(new Color(30, 144, 255));
+				x.setBounds(99, 6, 44, 27);
+				this.y = new JSpinner();
+				y.setBackground(new Color(30, 144, 255));
+				y.setBounds(181, 4, 42, 30);
+				this.z = new JSpinner();
+				z.setBackground(new Color(30, 144, 255));
+				z.setBounds(260, 4, 42, 30);
+				
+				
+				//position
+				JPanel position = new JPanel();
+				position.setBounds(10, 58, 314, 36);
+				parametreBase.add(position);
+				position.setBorder(new LineBorder(Color.BLACK,1));
+				position.setBackground(Color.WHITE);
+				JLabel lposition = new JLabel("Position:   ");
+				lposition.setBounds(10, 12, 66, 14);
+				JLabel xnom = new JLabel("x");
+				xnom.setHorizontalAlignment(SwingConstants.RIGHT);
+				xnom.setBounds(61, 7, 28, 24);
+				JLabel ynom = new JLabel("y");
+				ynom.setHorizontalAlignment(SwingConstants.RIGHT);
+				ynom.setBounds(153, 12, 17, 14);
+				JLabel znom = new JLabel("z");
+				znom.setHorizontalAlignment(SwingConstants.RIGHT);
+				znom.setBounds(233, 12, 17, 14);
+				position.setLayout(null);
+				position.add(lposition);
+				
+						x.setPreferredSize(new Dimension(30, 30));	
+						y.setPreferredSize(new Dimension(30, 30));	
+						z.setPreferredSize(new Dimension(30, 30));
+						position.add(xnom);
+						position.add(x);
+						position.add(ynom);
+						position.add(y);
+						position.add(znom);
+						position.add(z);
+						
+						JPanel panel_1 = new JPanel();
+						panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 3));
+						panel_1.setBackground(Color.WHITE);
+						panel_1.setBounds(371, 11, 355, 290);
+						getContentPane().add(panel_1);
 		
-		ActionAddmateriau listener5 = new ActionAddmateriau();
-		addMateriau.addActionListener(listener5);
-		
-		ActionCouleur listener6 = new ActionCouleur();
-		color.addActionListener(listener6);
 		
     }	
 	public FenetreObjet(String nom, RayTracing rayTracing,ListeObjets oL,JList<Objet> L, Objet o) {
@@ -274,11 +354,18 @@ private static final long serialVersionUID = 1L;
 		this.rayTracing = rayTracing;
 	    this.listeO=oL;
 	    this.grilleO=L;
-	    this.dimen = new JTextField("25");
-	    this.x = new JTextField("255");
-	    this.y = new JTextField("255");
-	    this.z = new JTextField("255");
-	    this.ref = new JTextField("1");
+	    this.dimen = new JSpinner();
+	    
+	    this.x = new JSpinner();
+	    this.y = new JSpinner();
+	    this.z = new JSpinner();
+	    
+		this.rouge = new JTextField();
+		this.vert = new JTextField();
+		this.bleu = new JTextField();
+		
+		this.couleurChoisi = new JPanel();
+
 	    this.ajouter = new JButton("Modifier");
 	    ajouter.addActionListener(new ActionModifierObjet());
 	    initialise();
@@ -289,11 +376,6 @@ private static final long serialVersionUID = 1L;
 	}
 	
 	private class ActionAnnuler implements ActionListener {
-		public void actionPerformed(ActionEvent e) {	
-		}
-	}
-
-	private class ActionAddobjet implements ActionListener {
 		public void actionPerformed(ActionEvent e) {	
 		}
 	}
@@ -311,6 +393,14 @@ private static final long serialVersionUID = 1L;
 	private class ActionCouleur implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mycolor = JColorChooser.showDialog(jf,"Swing color chooser", null);
+			int r = mycolor.getRed();
+			int g = mycolor.getGreen();
+			int b = mycolor.getBlue();
+			rouge.setText(String.valueOf(r));
+			vert.setText(String.valueOf(g));
+			bleu.setText(String.valueOf(b));
+			couleurChoisi.setBackground(mycolor);
+			
 		}
 	}
 	public static void main(String[] args) {
