@@ -87,6 +87,7 @@ public class FenetreLumiere extends JFrame {
 	 * Create the frame.
 	 */
 	public FenetreLumiere(RayTracing rt, ListeLumieres l, JList<Lumieres> g) {		
+		super("Ajouter Lumière");
 		this.raytracing = rt; 
 		this.listeL = l;
 		this.grilleL = g;	
