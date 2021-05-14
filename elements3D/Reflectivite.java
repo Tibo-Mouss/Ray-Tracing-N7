@@ -52,10 +52,12 @@ public class Reflectivite implements Propriete, Serializable {
 	}
 	
 	public void setIntensite(double intensite) {
+		assert (0 <= intensite  && intensite <= 1);
 		this.intensite = intensite;
 	}
 	
 	public void setEnergie(double energie) {
+		assert (0 <= energie  && energie <= 1);
 		this.energie = energie;
 		System.out.println(this.energie);
 	}
