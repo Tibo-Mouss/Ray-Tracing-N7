@@ -29,6 +29,14 @@ import javax.swing.JSpinner;
 import java.awt.Panel;
 import java.awt.Font;
 import java.awt.TextField;
+import javax.swing.JCheckBox;
+import javax.swing.SpinnerNumberModel;
+import java.awt.event.HierarchyBoundsAdapter;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 public class FenetreObjet extends JFrame {
 
 private static final long serialVersionUID = 1L;
@@ -69,17 +77,16 @@ private static final long serialVersionUID = 1L;
 		this.y= new JSpinner();
 		this.z= new JSpinner();
 		
-		this.rouge = new JTextField();
-		this.vert = new JTextField();
-		this.bleu = new JTextField();
+		this.rouge = new JTextField("0");
+		this.vert = new JTextField("0");
+		this.bleu = new JTextField("0");
 		
-		this.couleurChoisi = new JPanel();
-		
+		this.couleurChoisi = new JPanel();		
 	    initialise();
 	}
 	private void initialise() {
 		jf = new JFrame("objet");
-		this.setSize(758, 543);
+		this.setSize(758, 554);
 	    this.setLocation(100, 100);
 	    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	    
@@ -112,7 +119,7 @@ private static final long serialVersionUID = 1L;
 		ajouter.addActionListener(new ActionAjouterObjet());
 		
 		JPanel bottomPanel = new JPanel();
-		bottomPanel.setBounds(17, 426, 709, 40);
+		bottomPanel.setBounds(17, 437, 709, 40);
 		bottomPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		bottomPanel.setBackground(new Color(0, 0, 255));
 		bottomPanel.setLayout(new BorderLayout());
@@ -139,7 +146,7 @@ private static final long serialVersionUID = 1L;
 		
 		
 		JPanel leftPanel = new JPanel();
-		leftPanel.setBounds(17, 11, 355, 420);
+		leftPanel.setBounds(17, 11, 355, 430);
 		leftPanel.setBorder(new LineBorder(Color.BLACK,1));
 		leftPanel.setBackground(new Color(0, 0, 255));
 		maincontainer.add(leftPanel);
@@ -186,6 +193,7 @@ private static final long serialVersionUID = 1L;
 		couleur.add(bleu);
 		
 		couleurChoisi.setBorder(new LineBorder(new Color(0, 0, 0)));
+		couleurChoisi.addKeyListener(new ColorUpdater(rouge,bleu,vert,couleurChoisi));
 		couleurChoisi.setBounds(86, 15, 25, 25);
 		couleur.add(couleurChoisi);
 		couleurChoisi.setLayout(null);
@@ -234,7 +242,7 @@ private static final long serialVersionUID = 1L;
 		
 		//parametre de materiaus
 		JPanel materiaus = new JPanel();
-		materiaus.setBounds(7, 238, 335, 165);
+		materiaus.setBounds(7, 238, 335, 181);
 		leftPanel.add(materiaus);
 		materiaus.setBorder(new LineBorder(new Color(0, 255, 255)));
 		materiaus.setBackground(new Color(0, 191, 255));
@@ -243,15 +251,38 @@ private static final long serialVersionUID = 1L;
 		
 		//Reflectivite de materiaus
 		JPanel reflectivite = new JPanel();
-		reflectivite.setBounds(10, 49, 315, 45);
+		reflectivite.setBounds(10, 43, 315, 51);
 		materiaus.add(reflectivite);
 		reflectivite.setBorder(new LineBorder(Color.BLACK,1));
 		reflectivite.setBackground(Color.WHITE);
-		JLabel lreflectivite = new JLabel("Reflectivite:",JLabel.LEFT);
-		lreflectivite.setBounds(10, 11, 81, 14);
 		reflectivite.setLayout(null);
-		reflectivite.add(lreflectivite);
-		JLabel lobjet = new JLabel("Propri\u00E9t\u00E9 de Objet",JLabel.CENTER);
+		
+		JSpinner intensiteRefl = new JSpinner();
+		intensiteRefl.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		intensiteRefl.setBounds(81, 14, 50, 25);
+		reflectivite.add(intensiteRefl);
+		
+		JSpinner energieRefl = new JSpinner();
+		energieRefl.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		energieRefl.setBounds(148, 15, 50, 25);
+		reflectivite.add(energieRefl);
+		
+		JLabel labelIntensiteRF = new JLabel("Intensite ");
+		labelIntensiteRF.setHorizontalAlignment(SwingConstants.CENTER);
+		labelIntensiteRF.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelIntensiteRF.setBounds(82, 0, 49, 14);
+		reflectivite.add(labelIntensiteRF);
+		
+		JLabel labelEnergieRF = new JLabel("Energie ");
+		labelEnergieRF.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEnergieRF.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelEnergieRF.setBounds(149, 0, 49, 14);
+		reflectivite.add(labelEnergieRF);
+		
+		JCheckBox activeRefr = new JCheckBox("On");
+		activeRefr.setBounds(6, 14, 46, 25);
+		reflectivite.add(activeRefr);
+		JLabel lobjet = new JLabel("Propri\u00E9t\u00E9 du Mat\u00E9riaux ",JLabel.CENTER);
 		lobjet.setBounds(10, 11, 315, 27);
 		materiaus.add(lobjet);
 		
@@ -259,24 +290,64 @@ private static final long serialVersionUID = 1L;
 		reflectivite_1.setLayout(null);
 		reflectivite_1.setBorder(new LineBorder(Color.BLACK,1));
 		reflectivite_1.setBackground(Color.WHITE);
-		reflectivite_1.setBounds(10, 105, 315, 45);
+		reflectivite_1.setBounds(10, 119, 315, 51);
 		materiaus.add(reflectivite_1);
 		
+		JSpinner intensiteRefr = new JSpinner();
+		intensiteRefr.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		intensiteRefr.setBounds(82, 14, 50, 25);
+		reflectivite_1.add(intensiteRefr);
+		
+		JLabel labelIntensiteRR = new JLabel("Intensite ");
+		labelIntensiteRR.setHorizontalAlignment(SwingConstants.CENTER);
+		labelIntensiteRR.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelIntensiteRR.setBounds(82, 0, 49, 14);
+		reflectivite_1.add(labelIntensiteRR);
+		
+		JSpinner energieRefra = new JSpinner();
+		energieRefra.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		energieRefra.setBounds(148, 14, 50, 25);
+		reflectivite_1.add(energieRefra);
+		
+		JLabel labelEnergieRR = new JLabel("Energie ");
+		labelEnergieRR.setHorizontalAlignment(SwingConstants.CENTER);
+		labelEnergieRR.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelEnergieRR.setBounds(149, 0, 49, 14);
+		reflectivite_1.add(labelEnergieRR);
+		
+		JSpinner indiceRR = new JSpinner();
+		indiceRR.setModel(new SpinnerNumberModel(1.0, 1.0, 100, 0.01));
+		indiceRR.setBounds(234, 14, 50, 25);
+		reflectivite_1.add(indiceRR);
+		
+		JCheckBox activeRefl = new JCheckBox("On");
+		activeRefl.setBounds(6, 14, 46, 25);
+		reflectivite_1.add(activeRefl);
+		
+		JLabel labelIndiceMilieuRR = new JLabel("Indice de r\u00E9fraction");
+		labelIndiceMilieuRR.setHorizontalAlignment(SwingConstants.CENTER);
+		labelIndiceMilieuRR.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		labelIndiceMilieuRR.setBounds(214, 0, 91, 14);
+		reflectivite_1.add(labelIndiceMilieuRR);
+		JLabel lreflectivite = new JLabel("Reflectivite:",JLabel.LEFT);
+		lreflectivite.setBounds(10, 29, 81, 14);
+		materiaus.add(lreflectivite);
+		
 		JLabel lrefraction = new JLabel("R\u00E9fraction:", SwingConstants.LEFT);
-		lrefraction.setBounds(10, 11, 81, 14);
-		reflectivite_1.add(lrefraction);
+		lrefraction.setBounds(10, 105, 81, 14);
+		materiaus.add(lrefraction);
 		color.addActionListener(new ActionCouleur());
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 255));
-		panel.setBounds(371, 301, 355, 130);
+		panel.setBounds(371, 301, 355, 140);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 				
 				this.dimen = new JSpinner();
 				
 				JPanel parametreBase = new JPanel();
-				parametreBase.setBounds(10, 11, 332, 102);
+				parametreBase.setBounds(10, 17, 332, 102);
 				panel.add(parametreBase);
 				parametreBase.setBorder(new LineBorder(new Color(0, 255, 255), 1, true));
 				parametreBase.setBackground(new Color(0, 191, 255));
@@ -301,12 +372,15 @@ private static final long serialVersionUID = 1L;
 				dimen.setPreferredSize(new Dimension(100, 40));	
 				dimension.add(dimen);
 				this.x = new JSpinner();
+				x.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
 				x.setBackground(new Color(30, 144, 255));
 				x.setBounds(99, 6, 44, 27);
 				this.y = new JSpinner();
+				y.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
 				y.setBackground(new Color(30, 144, 255));
 				y.setBounds(181, 4, 42, 30);
 				this.z = new JSpinner();
+				z.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
 				z.setBackground(new Color(30, 144, 255));
 				z.setBounds(260, 4, 42, 30);
 				
@@ -377,6 +451,7 @@ private static final long serialVersionUID = 1L;
 	
 	private class ActionAnnuler implements ActionListener {
 		public void actionPerformed(ActionEvent e) {	
+			dispose();
 		}
 	}
 	
@@ -385,21 +460,41 @@ private static final long serialVersionUID = 1L;
 		}
 	}
 	
-	private class ActionAddmateriau implements ActionListener {
-		public void actionPerformed(ActionEvent e) {	
+	private class ColorUpdater extends KeyAdapter {
+		JTextField red;
+		JTextField blue;
+		JTextField green;
+		JPanel couleur;
+		
+		public ColorUpdater(JTextField r,JTextField b,JTextField g, JPanel c) {
+			super();
+			red = r;
+			blue = b;
+			green = g;
+			couleur = c;
+		}
+		public void keyReleased(KeyEvent e) {
+			String r = red.getText();
+			String g = blue.getText();
+			String b = green.getText();
+		    mycolor = new Color(Integer.parseInt(r), Integer.parseInt(g),Integer.parseInt(b));
+		    couleur.setBackground(mycolor);
+			
 		}
 	}
 	
 	private class ActionCouleur implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mycolor = JColorChooser.showDialog(jf,"Swing color chooser", null);
-			int r = mycolor.getRed();
-			int g = mycolor.getGreen();
-			int b = mycolor.getBlue();
-			rouge.setText(String.valueOf(r));
-			vert.setText(String.valueOf(g));
-			bleu.setText(String.valueOf(b));
-			couleurChoisi.setBackground(mycolor);
+			if (mycolor != null) {
+				int r = mycolor.getRed();
+				int g = mycolor.getGreen();
+				int b = mycolor.getBlue();
+				rouge.setText(String.valueOf(r));
+				vert.setText(String.valueOf(g));
+				bleu.setText(String.valueOf(b));
+				couleurChoisi.setBackground(mycolor);
+			}
 			
 		}
 	}
