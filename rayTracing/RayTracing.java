@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class RayTracing {
 	
+	private static final boolean DEBUG = false;
+	
 	/** Scene dans laquelle sont definies les objets et les lumieres */
 	private Scene scene;
 	
@@ -30,7 +32,7 @@ public class RayTracing {
 	private boolean ombreIsOn;
 	
 	/** Indique si l'on utilise la technique de shadding pour le rendu.*/
-	private boolean shaddingisOn;
+	private boolean shadingIsOn;
 
 	/** 
 	 * @param nscene : Scene dans laquelle sont definies les objets et les lumieres
@@ -50,7 +52,7 @@ public class RayTracing {
 		this.camera = ncamera;
 		this.maxRebond = rebonds;
 		this.ombreIsOn = ombre;
-		this.shaddingisOn = shadding;
+		this.shadingIsOn = shadding;
 	}
 	/**
 	 * Obtenir la scÃ¨ne.
@@ -191,7 +193,7 @@ public class RayTracing {
 			// DÃ©tection de l'ombre
 			if (this.ombreIsOn) {
 				Vecteur normal = objetIntersection.getNormal(intersection, rayon);
-				lancerShadowRay(rayon, couleurObjetInt, normal, intersection, objetIntersection);
+				lancerShadowRay(rayon, couleurObjetInt, rayon.getDirection(), normal, intersection, objetIntersection);
 			} else {
 				setCouleurRayon(rayon, couleurOI);	
 			}
@@ -239,13 +241,22 @@ public class RayTracing {
 	 * @param normal vecteur normal Ã  la surface de l'objet intersectÃ© au point d'impact
 	 * @param intersectionObjet objet intersectÃ©
 	 */
-	private void lancerShadowRay(Rayon rayon, Couleur couleurIntersection, Vecteur normal, Point intersectionObjet, Objet3D objetIntersection) {
+	private void lancerShadowRay(Rayon rayon, Couleur couleurIntersection, Vecteur incident, Vecteur normal, Point intersectionObjet, Objet3D objetIntersection) {
 
+		// Couleur ambiante à fournir (caractéristique de la scène)
+		Couleur ambiante = new Couleur( Color.WHITE );
+		
+		// Paramètre : brillance au point d'intersection
+		double brillance = 100;
+		double importanceSpeculaire = 0.7;
+		double importanceAmbiante = 0.1;
+		double importanceDiffuse = 1.0;
+		
 		
 		//paramÃ¨tres de la boucle for
 		Rayon shadowRay;
-		Color couleurLumiereCourante;
-		Lumiere lumiereCourante;
+		Color couleurLumiere;
+		// Lumiere lumiereCourante;
 		double distanceLumiere;
 		double distanceCourante;
 
@@ -254,33 +265,42 @@ public class RayTracing {
 		boolean ombre;
 		Objet3D objetCourant;
 		Point intersectionCourante;
-		Color couleurCourante = Color.BLACK;
-		Color couleurRayon = rayon.getCouleur();
+		
+		// TODO : Modifier API de couleur pour que ces opérations y figurent
+		double composanteDiffuseRouge = 0.0;
+		double composanteDiffuseVerte = 0.0;
+		double composanteDiffuseBleue = 0.0;
+		double composanteSpeculaireRouge = 0.0;
+		double composanteSpeculaireVerte = 0.0;
+		double composanteSpeculaireBleue = 0.0;
+		double composanteAmbianteRouge = importanceAmbiante * ambiante.getRed();
+		double composanteAmbianteVerte = importanceAmbiante * ambiante.getGreen();
+		double composanteAmbianteBleue = importanceAmbiante * ambiante.getBlue();
 
 		//constante de la mÃ©thode
 		List<Lumiere> listeLumieres=  this.scene.getLumiere();
 		int nbLumieres = listeLumieres.size();
 		int nbObjets = this.scene.getObjet3D().size();
-		double shading;
+		double diffusion, specularite;
 
 		// On parcourt toutes les lumiÃ¨res
-		for (int lumiere = 0 ; lumiere < nbLumieres ; lumiere++) {
+		for (Lumiere lumiere : listeLumieres) {
 			
-			lumiereCourante = listeLumieres.get(lumiere);
-			distanceLumiere = intersectionObjet.distance(lumiereCourante.getCentre());
+			// lumiereCourante = listeLumieres.get(lumiere);
+			distanceLumiere = intersectionObjet.distance(lumiere.getCentre());
 			
 			// CrÃ©ation du shadow ray pour la lumiÃ¨re courante
-			Vecteur vecteurLumiere = new Vecteur(intersectionObjet, lumiereCourante.getCentre());
+			Vecteur vecteurLumiere = new Vecteur(intersectionObjet, lumiere.getCentre());
 			// Ã  modifier par getDirection Ã  ajouter dans Lumiere
 			shadowRay = new Rayon(vecteurLumiere, intersectionObjet);
 			//!!!\ faire une classe shadowRay ??
 
 			objet = 0; // indice de la boucle while
 			//ombre = false; // indique si l'objet est Ã  l'ombre par rapport Ã  la lumiÃ¨re courante
-			couleurLumiereCourante = lumiereCourante.getCouleur();
+			couleurLumiere = lumiere.getCouleur();
 			
 			// On vÃ©rifie que l'objet ne se fait pas de l'ombre lui-mÃªme 
-			ombre = objetIntersection.getSelfOmbre(intersectionObjet, rayon, lumiereCourante);
+			ombre = objetIntersection.getSelfOmbre(intersectionObjet, rayon, lumiere);
 			
 			if (!ombre) {
 				// On parcourt tous les objets pour dÃ©terminer si l'objet est Ã  l'ombre
@@ -300,46 +320,88 @@ public class RayTracing {
 			// Si l'objet n'est pas Ã  l'ombre par rapport Ã  la lumiÃ¨re courante
 			if (!ombre) {
 	
-				// calcul du coefficient de shadding
-				if (this.shaddingisOn) {
+				// calcul du coefficient de shading
+				if (this.shadingIsOn) {
 					vecteurLumiere.normaliser();
 					normal.normaliser();
-					shading = Math.max(0.0, normal.produitScalaire(vecteurLumiere));
-				
+					incident.normaliser(); 
+					double cosTheta = normal.produitScalaire(vecteurLumiere);
+					// Calcul du vecteur lumière réfléchi
+					// TODO : Modifier API de vecteur pour que cette opération y figure
+					Vecteur reflexionLumiere = normal.multiplication(2.0 * cosTheta).soustraire(vecteurLumiere);
+					reflexionLumiere.normaliser();
+					// Détermine la force de la spécularité en ce point pour cette lumière
+					double cosOmega = - incident.produitScalaire(reflexionLumiere);
+					diffusion = Math.max(0.0, cosTheta);
+					specularite = Math.max(0.0, importanceSpeculaire * Math.pow(cosOmega, brillance));
+					if (DEBUG) {
+						if (specularite > 0.5) {
+							System.out.println(
+									" 2 x " + cosTheta + " * ( " + normal.getX() + ", " + normal.getY() + ", " + normal.getZ() + ") "
+									+ "- ( " + vecteurLumiere.getX() + ", " + vecteurLumiere.getY() + ", " + vecteurLumiere.getZ() + ") "
+									+ " = ( " + reflexionLumiere.getX() + ", " + reflexionLumiere.getY() + ", " + reflexionLumiere.getZ() + ") "
+											+ specularite);
+						}
+					}
 				} else {
-					shading = 1;
+					diffusion = 1;
+					specularite = 0;
 				}
 				
+				// Idée : modéliser la dispersion de la lumière (prévoir un coefficient de dispersion ambiant)
+				double distance = intersectionObjet.distance(lumiere.getCentre());
+				
+				double absorbtion = 1; //100/(distance*distance);
+				
+				double eclairementRouge = absorbtion * couleurLumiere.getRed();
+				double eclairementVert = absorbtion * couleurLumiere.getGreen();
+				double eclairementBleu = absorbtion * couleurLumiere.getBlue();
+				
+				// Accumuler la composante spéculaire de chaque source de lumière
+				// composanteSpeculaire += couleurLumiere * specularite;
+				composanteSpeculaireRouge += specularite * eclairementRouge;				
+				composanteSpeculaireVerte += specularite * eclairementVert;
+				composanteSpeculaireBleue += specularite * eclairementBleu;
+				
+				// Accumuler la composante diffuse de chaque source de lumière
+				// composanteDiffuse += couleurLumiere * diffusion;
+				composanteDiffuseRouge += diffusion * eclairementRouge;				
+				composanteDiffuseVerte += diffusion * eclairementVert;
+				composanteDiffuseBleue += diffusion * eclairementBleu;
+				
 				// mise Ã  jour de la couleur du rayon
-				couleurRayon = rayon.getCouleur();
+				// couleurRayon = rayon.getCouleur();
 				
-				double distance = intersectionObjet.distance(lumiereCourante.getCentre());
-				
-				double i = 1; //100/(distance*distance);
-				
-				double nr = Math.min(i*shading*couleurLumiereCourante.getRed(), couleurIntersection.getRed());				
-				double ng = Math.min(i*shading*couleurLumiereCourante.getGreen(), couleurIntersection.getGreen());
-				double nb = Math.min(i*shading*couleurLumiereCourante.getBlue(), couleurIntersection.getBlue());
-				
-				double ar = couleurCourante.getRed();
-				double ag = couleurCourante.getGreen();
-				double ab = couleurCourante.getBlue();
-				
-				// /!\ Ã  modifier aprÃ¨s maj de setCouleur() dans Rayon
-				double r = Math.max(nr, ar);
-				double g = Math.max(ng, ag);
-				double b = Math.max(nb, ab);
-				
-				System.out.println(shading);
-				
-				
-				couleurCourante = new Color((int)r, (int)g, (int)b);
 			}
+			
 		}
+		
+		// Filtrage de la lumière reçu par l'objet : prise en compte de la couleur de l'objet
+		double composanteRouge = Math.min(composanteAmbianteRouge + composanteDiffuseRouge, couleurIntersection.getRed());
+		double composanteVerte = Math.min(composanteAmbianteVerte + composanteDiffuseVerte, couleurIntersection.getGreen());
+		double composanteBleue = Math.min(composanteAmbianteBleue + composanteDiffuseBleue, couleurIntersection.getBlue());
+		
+		// Prise en compte du maximum de chaque composante
+		// TODO : faire un modèle plus réaliste de la perception logarithmique par l'oeil
+		// Idée : calculer l'énergie reçue par chaque point
+		// Mettre à l'échelle 0..255 à partir de l'énergie maximale et d'une échelle logarithmique
+		// Calculer le logarithme de l'énergie reçue
+		// Normaliser en 0 et 255
+		// Prévoir un seuil de saturation pour éviter que rien ne soit blanc
+		composanteRouge = Math.min(composanteRouge + composanteSpeculaireRouge, 255);
+		composanteVerte = Math.min(composanteVerte + composanteSpeculaireVerte, 255);
+		composanteBleue = Math.min(composanteBleue + composanteSpeculaireBleue, 255);
 		// Si l'objet est Ã  l'ombre pour toutes les lumiÃ¨res, le rayon est noir.
 		
+		// couleurPoint = Min( Blanc, Min((composanteAmbiante + composanteDiffuse), couleurObjet) + composanteSpeculaire);
+		
+		Color couleurRayon = new Color( 
+				(int) Math.round(composanteRouge),
+				(int) Math.round(composanteVerte),
+				(int) Math.round(composanteBleue)
+				);
 
-		setCouleurRayon(rayon, couleurCourante);
+		setCouleurRayon(rayon, couleurRayon);
 			
 	}
 }
