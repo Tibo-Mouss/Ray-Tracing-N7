@@ -3,6 +3,7 @@ package sceneXN;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import IG_test.*;
 import elements3D .*;
 import utilitaire .*;
 import rayTracing .*;
@@ -45,11 +46,13 @@ public class SceneMedium1 {
 			
 		    // Lancement du ray tracing
 			RayTracing raytracing = new RayTracing(scene, camera, 10, true, true);
-			raytracing.lancerRayTracing();
+			//raytracing.lancerRayTracing();
+			FenetrePrincipale p = new FenetrePrincipale(raytracing);
+			p.lancerFenetre();
 			
 			// Enregistrement de l'image
-			BufferedImage img = camera.creerImage();
-			camera.sauvegarderImage("test1");
+			//BufferedImage img = camera.creerImage();
+			//camera.sauvegarderImage("test1");
 		} catch (Exception e) {
 			System.out.println("Erreur dans la gestion de la scène.");
 		}

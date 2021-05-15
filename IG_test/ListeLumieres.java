@@ -27,8 +27,10 @@ public class ListeLumieres extends AbstractListModel<Lumieres> {
 	}
 	
 	public void initialiser(List<Lumiere> l) {	
-		for (int i = 0; i < l.size(); i++) {
-			this.lumieres.add(new Lumieres(l.get(i)));
+		if (l!=null) {
+			for (int i = 0; i < l.size(); i++) {
+				this.lumieres.add(new Lumieres(l.get(i)));
+			}
 		}
 	}
 	

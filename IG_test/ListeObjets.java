@@ -26,8 +26,10 @@ public class ListeObjets extends AbstractListModel<Objet> {
 	}
 	
 	public void initialiser(List<Objet3D> o) {	
-		for (int i = 0; i < o.size(); i++) {
-			this.objets.add(new Objet(o.get(i)));
+		if (o!=null) {
+			for (int i = 0; i < o.size(); i++) {
+				this.objets.add(new Objet(o.get(i)));
+			}
 		}
 	}
 	

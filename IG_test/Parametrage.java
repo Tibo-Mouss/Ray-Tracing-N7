@@ -10,15 +10,22 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import rayTracing.RayTracing;
+
 import javax.swing.JSpinner;
 import javax.swing.JLabel;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
+import javax.swing.SpinnerNumberModel;
 
 public class Parametrage extends JFrame{
 
 	private final JPanel contentPanel = new JPanel();
+	private RayTracing rt;
 	private JSpinner nbRebond;
 	private JCheckBox activeOmbres;
 	private JCheckBox activerMthodeShadding;
@@ -28,7 +35,7 @@ public class Parametrage extends JFrame{
 	 */
 	public static void main(String[] args) {
 		try {
-			Parametrage dialog = new Parametrage();
+			Parametrage dialog = new Parametrage(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -39,7 +46,8 @@ public class Parametrage extends JFrame{
 	/**
 	 * Create the dialog.
 	 */
-	public Parametrage() {
+	public Parametrage(RayTracing nrt) {
+		this.rt = nrt;
 		setBounds(100, 100, 372, 179);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -47,25 +55,31 @@ public class Parametrage extends JFrame{
 		contentPanel.setLayout(null);
 		
 		nbRebond = new JSpinner();
+		nbRebond.setModel(new SpinnerNumberModel(0, 0, null, 1));
 		nbRebond.setToolTipText("Nombre de rebonds");
-		nbRebond.setBounds(222, 8, 30, 20);
+		nbRebond.setValue(nrt.getRebond());
+		nbRebond.addChangeListener(new setRebond());
+		nbRebond.setBounds(209, 8, 85, 20);
 		contentPanel.add(nbRebond);
 		
 		JLabel nombreRebond = new JLabel("Nombre de rebonds ");
 		nombreRebond.setHorizontalAlignment(SwingConstants.LEFT);
 		nombreRebond.setBackground(new Color(240, 240, 240));
 		nombreRebond.setEnabled(true);
-		nombreRebond.setBounds(52, 10, 160, 17);
+		nombreRebond.setBounds(61, 10, 160, 17);
 		contentPanel.add(nombreRebond);
 		
 		activeOmbres = new JCheckBox("Activer Ombres");
-		activeOmbres.setSelected(true);
+		activeOmbres.setSelected(rt.getOmbre());
+		activeOmbres.addActionListener(new ActiverOmbre());
 		activeOmbres.setMnemonic('O');
 		activeOmbres.setBounds(52, 34, 200, 23);
 		contentPanel.add(activeOmbres);
 		
 		activerMthodeShadding = new JCheckBox("Activer M\u00E9thode Shadding");
-		activerMthodeShadding.setMnemonic('O');
+		activerMthodeShadding.setSelected(rt.getShadding());
+		activerMthodeShadding.addActionListener(new ActiverShadding());
+		activerMthodeShadding.setMnemonic('S');
 		activerMthodeShadding.setBounds(52, 60, 200, 23);
 		contentPanel.add(activerMthodeShadding);
 		
@@ -74,32 +88,39 @@ public class Parametrage extends JFrame{
 		getContentPane().add(buttonPane, BorderLayout.SOUTH);
 		
 		JButton okButton = new JButton("OK");
-		okButton.addActionListener(new ActionModifier());
+		okButton.addActionListener(new ActionOk());
 		buttonPane.add(okButton);
 		getRootPane().setDefaultButton(okButton);
 		
-		JButton cancelButton = new JButton("Fermer");
-		cancelButton.addActionListener(new ActionQuitter());
-		buttonPane.add(cancelButton);
-		
-	}
-	public JSpinner getNbRebond() {
-		return nbRebond;
-	}
-	public JCheckBox getActiveOmbres() {
-		return activeOmbres;
-	}
-	public JCheckBox getActiverMthodeShadding() {
-		return activerMthodeShadding;
 	}
 	
-	public class ActionQuitter implements ActionListener {
-		public void actionPerformed(ActionEvent ev) {
-			dispose();
+	public class setRebond implements ChangeListener {
+		
+		public void stateChanged(ChangeEvent event) {
+			JSpinner valeur = (JSpinner) event.getSource();
+			rt.setRebond((int)valeur.getValue());
 		}
 	}
 	
-	public class ActionModifier implements ActionListener {
+	
+	
+	public class ActiverOmbre implements ActionListener {
+		
+		public void actionPerformed(ActionEvent ev) {
+			boolean state = activeOmbres.isSelected();
+			rt.setOmbre(state);
+		}
+	}
+	
+	public class ActiverShadding implements ActionListener {
+		
+		public void actionPerformed(ActionEvent ev) {
+			boolean state = activerMthodeShadding.isSelected();
+			rt.setShadding(state);
+		}
+	}
+	
+	public class ActionOk implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
 			dispose();
 		}

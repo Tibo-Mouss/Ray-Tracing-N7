@@ -68,6 +68,55 @@ public class RayTracing {
 		return this.camera;
 	}
 	
+	/**
+	 * Obtenir si les ombres sont activées.
+	 * @return etat des ombres.
+	 */
+	public boolean getOmbre() {
+		return this.ombreIsOn;
+	}
+	
+	/**
+	 * Obtenir le nombre de rebonds
+	 * @return nombre de rebonds.
+	 */
+	public int getRebond() {
+		return this.maxRebond;
+	}
+	
+	
+	/**
+	 * Obtenir si le shadding est activée.
+	 * @return shadding actif ou non.
+	 */
+	public boolean getShadding() {
+		return this.shaddingisOn;
+	}
+	
+	/**
+	 * Modifier ombreIsOn.
+	 * @param o
+	 */
+	public void setOmbre(boolean o) {
+		this.ombreIsOn = o;
+	}
+	
+	/**
+	 * Obtenir le nombre de rebonds.
+	 * @param r.
+	 */
+	public void setRebond(int r) {
+		this.maxRebond = r;
+	}
+	
+	/**
+	 * Modifier shadding.
+	 * @param o
+	 */
+	public void setShadding(boolean o) {
+		this.shaddingisOn = o;
+	}
+	
 	/** Obtenir la couleur finale d'un pixel a partir de ses rayons fils.
 	 * @param listeRayonsFinaux la liste des rayons fils finaux
 	 * @return la couleur finale du pixel

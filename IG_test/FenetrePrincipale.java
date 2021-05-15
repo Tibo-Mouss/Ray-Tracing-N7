@@ -25,8 +25,12 @@ import javax.swing.border.LineBorder;
 
 
 import elements3D.*;
+import rayTracing.Camera;
 import rayTracing.RayTracing;
+import rayTracing.Scene;
 import utilitaire.Point;
+import utilitaire.Vecteur;
+
 import javax.swing.JScrollBar;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Component;
@@ -51,13 +55,20 @@ public class FenetrePrincipale {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FenetrePrincipale window = new FenetrePrincipale(null);
+					Scene scene = new Scene(300);
+					Camera camera = new Camera(new Point(20,0,5),new Vecteur(-10,0,0),1000,1000,new Vecteur(0,0,10)); //vHaut = (0,0,10) sur l'exemple geogebra
+					RayTracing raytracing = new RayTracing(scene, camera, 10, true, true);
+					FenetrePrincipale window = new FenetrePrincipale(raytracing);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	public void lancerFenetre() {
+		this.frame.setVisible(true);
 	}
 
 	/**
@@ -238,6 +249,7 @@ public class FenetrePrincipale {
 		frame.getContentPane().add(btnEnregistrerI);
 		
 		JButton lancerRT = new JButton("Lancer RayTracing");
+		lancerRT.addActionListener(new ActionLancerCalcul());
 		lancerRT.setBackground(new Color(0, 128, 128));
 		lancerRT.setBounds(10, 584, 200, 23);
 		frame.getContentPane().add(lancerRT);
@@ -312,7 +324,7 @@ public class FenetrePrincipale {
 	
 	public class ActionParametrer implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
-			Parametrage parametre = new Parametrage();
+			Parametrage parametre = new Parametrage(rayTracing);
 			parametre.setVisible(true);
 		}
 	}

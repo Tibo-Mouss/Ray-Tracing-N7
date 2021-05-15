@@ -21,6 +21,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import elements3D.Objet3D;
 import rayTracing.RayTracing;
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
@@ -463,8 +464,8 @@ private static final long serialVersionUID = 1L;
 		
 		
     }	
-	public FenetreObjet(String nom, RayTracing rayTracing,ListeObjets oL,JList<Objet> L, Objet o) {
-		super(nom);
+	public FenetreObjet(RayTracing rayTracing,ListeObjets oL,JList<Objet> L, Objet o) {
+		//Objet3D objet = o.getObjet();
 		this.rayTracing = rayTracing;
 	    this.listeO=oL;
 	    this.grilleO=L;
