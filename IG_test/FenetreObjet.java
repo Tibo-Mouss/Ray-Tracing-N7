@@ -18,6 +18,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import rayTracing.RayTracing;
 import javax.swing.SwingConstants;
@@ -47,17 +49,21 @@ private static final long serialVersionUID = 1L;
     private JButton ajouter;
 	private ListeObjets listeO;
 	private JList<Objet> grilleO;
-	private JSpinner dimen;
-	private JSpinner x;
-	private JSpinner y;
-	private JSpinner z;
+	
+	private int dimension;
+	private double x,y,z;
+	
+	private double iRR,iRL,eRR,eRL,indice;
+	
+	private boolean onRR,onRL;
+	
 	private Color mycolor;
 	private JColorChooser jcc;
 	private JFrame jf;
-	private JTextField rouge;
-	private JTextField vert;
-	private JTextField bleu;
-	private JPanel couleurChoisi;
+
+	private int r,b,v;
+	private JSpinner rouge,vert,bleu;
+	private JButton couleurChoisi;
 	private TextField nom;
 	private String forme[] = {"Spère", "Cube","Cone"};
 	private JComboBox formeO = new JComboBox(forme);
@@ -73,15 +79,30 @@ private static final long serialVersionUID = 1L;
 	    this.listeO = oL; 
 	    this.grilleO = L;
 	    
-	    this.x= new JSpinner();
-		this.y= new JSpinner();
-		this.z= new JSpinner();
+	    this.dimension = 0;
+	    
+	    this.x= 0.0;
+		this.y= 0.0;
+		this.z= 0.0;
 		
-		this.rouge = new JTextField("0");
-		this.vert = new JTextField("0");
-		this.bleu = new JTextField("0");
+		this.iRR = 0.0;
+		this.iRL = 0.0;
+		this.eRR = 0.0;
+		this.eRL = 0.0;
+		this.indice = 1.0;
 		
-		this.couleurChoisi = new JPanel();		
+		this.onRL = false;
+		this.onRR = false;
+		
+		this.r = 0;
+		this.b = 0;
+		this.v = 0;
+		
+		this.rouge = new JSpinner();
+		this.vert = new JSpinner();
+		this.bleu = new JSpinner();
+		
+		this.couleurChoisi = new JButton();		
 	    initialise();
 	}
 	private void initialise() {
@@ -138,11 +159,11 @@ private static final long serialVersionUID = 1L;
 		basDroit.add(enregistrer);
 		enregistrer.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-				ajouter.setBackground(new Color(30, 144, 255));
-				basDroit.add(ajouter);
+		ajouter.setBackground(new Color(30, 144, 255));
+		basDroit.add(ajouter);
 				
-						enregistrer.addActionListener(new ActionEnregistrer());
-						annuler.addActionListener(new ActionAnnuler());
+		enregistrer.addActionListener(new ActionEnregistrer());
+		annuler.addActionListener(new ActionAnnuler());
 		
 		
 		JPanel leftPanel = new JPanel();
@@ -181,19 +202,21 @@ private static final long serialVersionUID = 1L;
 		
 		
 		rouge.setBounds(128, 15, 48, 25);
+		rouge.setModel(new SpinnerNumberModel(r, 0, 255, 1));
+		rouge.addChangeListener(new Rouge());
 		couleur.add(rouge);
-		rouge.setColumns(10);	
-	
-		vert.setColumns(10);
+		
 		vert.setBounds(186, 15, 48, 25);
+		vert.setModel(new SpinnerNumberModel(v, 0, 255, 1));
+		vert.addChangeListener(new Vert());
 		couleur.add(vert);
-	
-		bleu.setColumns(10);
+		
 		bleu.setBounds(243, 15, 48, 25);
+		bleu.setModel(new SpinnerNumberModel(b, 0, 255, 1));
+		bleu.addChangeListener(new Bleu());
 		couleur.add(bleu);
 		
 		couleurChoisi.setBorder(new LineBorder(new Color(0, 0, 0)));
-		couleurChoisi.addKeyListener(new ColorUpdater(rouge,bleu,vert,couleurChoisi));
 		couleurChoisi.setBounds(86, 15, 25, 25);
 		couleur.add(couleurChoisi);
 		couleurChoisi.setLayout(null);
@@ -258,12 +281,14 @@ private static final long serialVersionUID = 1L;
 		reflectivite.setLayout(null);
 		
 		JSpinner intensiteRefl = new JSpinner();
-		intensiteRefl.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		intensiteRefl.setModel(new SpinnerNumberModel(this.iRL, 0.0, 1.0, 0.01));
+		intensiteRefl.addChangeListener(new ProprieteDouble(this.iRL));
 		intensiteRefl.setBounds(81, 14, 50, 25);
 		reflectivite.add(intensiteRefl);
 		
 		JSpinner energieRefl = new JSpinner();
-		energieRefl.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		energieRefl.setModel(new SpinnerNumberModel(this.eRL, 0.0, 1.0, 0.01));
+		energieRefl.addChangeListener(new ProprieteDouble(this.eRL));
 		energieRefl.setBounds(148, 15, 50, 25);
 		reflectivite.add(energieRefl);
 		
@@ -279,9 +304,10 @@ private static final long serialVersionUID = 1L;
 		labelEnergieRF.setBounds(149, 0, 49, 14);
 		reflectivite.add(labelEnergieRF);
 		
-		JCheckBox activeRefr = new JCheckBox("On");
-		activeRefr.setBounds(6, 14, 46, 25);
-		reflectivite.add(activeRefr);
+		JCheckBox activeRefl = new JCheckBox("On");
+		activeRefl.setBounds(6, 14, 46, 25);
+		activeRefl.setSelected(onRL);
+		reflectivite.add(activeRefl);
 		JLabel lobjet = new JLabel("Propri\u00E9t\u00E9 du Mat\u00E9riaux ",JLabel.CENTER);
 		lobjet.setBounds(10, 11, 315, 27);
 		materiaus.add(lobjet);
@@ -294,7 +320,8 @@ private static final long serialVersionUID = 1L;
 		materiaus.add(reflectivite_1);
 		
 		JSpinner intensiteRefr = new JSpinner();
-		intensiteRefr.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		intensiteRefr.setModel(new SpinnerNumberModel(this.iRR, 0.0, 1.0, 0.01));
+		intensiteRefr.addChangeListener(new ProprieteDouble(this.iRR));
 		intensiteRefr.setBounds(82, 14, 50, 25);
 		reflectivite_1.add(intensiteRefr);
 		
@@ -305,7 +332,8 @@ private static final long serialVersionUID = 1L;
 		reflectivite_1.add(labelIntensiteRR);
 		
 		JSpinner energieRefra = new JSpinner();
-		energieRefra.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		energieRefra.setModel(new SpinnerNumberModel(this.eRR, 0.0, 1.0, 0.01));
+		energieRefra.addChangeListener(new ProprieteDouble(this.eRR));
 		energieRefra.setBounds(148, 14, 50, 25);
 		reflectivite_1.add(energieRefra);
 		
@@ -316,19 +344,22 @@ private static final long serialVersionUID = 1L;
 		reflectivite_1.add(labelEnergieRR);
 		
 		JSpinner indiceRR = new JSpinner();
-		indiceRR.setModel(new SpinnerNumberModel(1.0, 1.0, 100, 0.01));
+		indiceRR.setModel(new SpinnerNumberModel(this.indice, 1.0, 100, 0.01));
+		indiceRR.addChangeListener(new ProprieteDouble(this.indice));
 		indiceRR.setBounds(234, 14, 50, 25);
 		reflectivite_1.add(indiceRR);
 		
-		JCheckBox activeRefl = new JCheckBox("On");
-		activeRefl.setBounds(6, 14, 46, 25);
-		reflectivite_1.add(activeRefl);
+		JCheckBox activeRefr = new JCheckBox("On");
+		activeRefr.setBounds(6, 14, 46, 25);
+		activeRefr.setSelected(onRR);
+		reflectivite_1.add(activeRefr);
 		
 		JLabel labelIndiceMilieuRR = new JLabel("Indice de r\u00E9fraction");
 		labelIndiceMilieuRR.setHorizontalAlignment(SwingConstants.CENTER);
 		labelIndiceMilieuRR.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		labelIndiceMilieuRR.setBounds(214, 0, 91, 14);
 		reflectivite_1.add(labelIndiceMilieuRR);
+		
 		JLabel lreflectivite = new JLabel("Reflectivite:",JLabel.LEFT);
 		lreflectivite.setBounds(10, 29, 81, 14);
 		materiaus.add(lreflectivite);
@@ -336,7 +367,7 @@ private static final long serialVersionUID = 1L;
 		JLabel lrefraction = new JLabel("R\u00E9fraction:", SwingConstants.LEFT);
 		lrefraction.setBounds(10, 105, 81, 14);
 		materiaus.add(lrefraction);
-		color.addActionListener(new ActionCouleur());
+		color.addActionListener(new ActionChoisirCouleur());
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(0, 0, 255));
@@ -344,82 +375,91 @@ private static final long serialVersionUID = 1L;
 		getContentPane().add(panel);
 		panel.setLayout(null);
 				
-				this.dimen = new JSpinner();
+		JSpinner dimen = new JSpinner();
+		dimen.setBackground(new Color(30, 144, 255));
+		dimen.setBounds(120, 6, 100, 25);
+		
+		JPanel parametreBase = new JPanel();
+		parametreBase.setBounds(10, 17, 332, 102);
+		panel.add(parametreBase);
+		parametreBase.setBorder(new LineBorder(new Color(0, 255, 255), 1, true));
+		parametreBase.setBackground(new Color(0, 191, 255));
+		parametreBase.setLayout(null);
 				
-				JPanel parametreBase = new JPanel();
-				parametreBase.setBounds(10, 17, 332, 102);
-				panel.add(parametreBase);
-				parametreBase.setBorder(new LineBorder(new Color(0, 255, 255), 1, true));
-				parametreBase.setBackground(new Color(0, 191, 255));
-				parametreBase.setLayout(null);
-				
-				dimen.setBackground(new Color(30, 144, 255));
-				dimen.setBounds(120, 6, 100, 25);
-				
-				//dimension
-				JPanel dimension = new JPanel();
-				dimension.setBounds(10, 11, 314, 36);
-				parametreBase.add(dimension);
-				dimension.setBorder(new LineBorder(Color.BLACK,1));
-				dimension.setBackground(Color.WHITE);
-				JLabel dimention = new JLabel("Dimension:         ");
-				dimention.setBounds(11, 13, 99, 14);
-				dimension.setLayout(null);
-				dimension.add(dimention);
-				dimention.setHorizontalAlignment(JLabel.LEFT);
-				//JTextField dimen = new JTextField();
+		//dimension
+		JPanel dimension = new JPanel();
+		dimension.setBounds(10, 11, 314, 36);
+		parametreBase.add(dimension);
+		dimension.setBorder(new LineBorder(Color.BLACK,1));
+		dimension.setBackground(Color.WHITE);
+		JLabel dimention = new JLabel("Dimension:         ");
+		dimention.setBounds(11, 13, 99, 14);
+		dimension.setLayout(null);
+		dimension.add(dimention);
+		dimention.setHorizontalAlignment(JLabel.LEFT);
+		//JTextField dimen = new JTextField();
        
-				dimen.setPreferredSize(new Dimension(100, 40));	
-				dimension.add(dimen);
-				this.x = new JSpinner();
-				x.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
-				x.setBackground(new Color(30, 144, 255));
-				x.setBounds(99, 6, 44, 27);
-				this.y = new JSpinner();
-				y.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
-				y.setBackground(new Color(30, 144, 255));
-				y.setBounds(181, 4, 42, 30);
-				this.z = new JSpinner();
-				z.setModel(new SpinnerNumberModel(0.0, null, null, 1.0));
-				z.setBackground(new Color(30, 144, 255));
-				z.setBounds(260, 4, 42, 30);
+		dimen.setPreferredSize(new Dimension(100, 40));	
+		dimension.add(dimen);
+		
+		JSpinner x = new JSpinner();
+		x.setModel(new SpinnerNumberModel(this.x, null, null, 1.0));
+		x.addChangeListener(new ProprieteDouble(this.x));
+		x.setBackground(new Color(30, 144, 255));
+		x.setBounds(99, 6, 44, 27);
+		
+		JSpinner y = new JSpinner();
+		y.setModel(new SpinnerNumberModel(this.y, null, null, 1.0));
+		y.addChangeListener(new ProprieteDouble(this.y));
+		y.setBackground(new Color(30, 144, 255));
+		y.setBounds(181, 4, 42, 30);
+		
+		JSpinner z = new JSpinner();
+		z.setModel(new SpinnerNumberModel(this.z, null, null, 1.0));
+		z.addChangeListener(new ProprieteDouble(this.z));
+		z.setBackground(new Color(30, 144, 255));
+		z.setBounds(260, 4, 42, 30);
 				
 				
-				//position
-				JPanel position = new JPanel();
-				position.setBounds(10, 58, 314, 36);
-				parametreBase.add(position);
-				position.setBorder(new LineBorder(Color.BLACK,1));
-				position.setBackground(Color.WHITE);
-				JLabel lposition = new JLabel("Position:   ");
-				lposition.setBounds(10, 12, 66, 14);
-				JLabel xnom = new JLabel("x");
-				xnom.setHorizontalAlignment(SwingConstants.RIGHT);
-				xnom.setBounds(61, 7, 28, 24);
-				JLabel ynom = new JLabel("y");
-				ynom.setHorizontalAlignment(SwingConstants.RIGHT);
-				ynom.setBounds(153, 12, 17, 14);
-				JLabel znom = new JLabel("z");
-				znom.setHorizontalAlignment(SwingConstants.RIGHT);
-				znom.setBounds(233, 12, 17, 14);
-				position.setLayout(null);
-				position.add(lposition);
+		//position
+		JPanel position = new JPanel();
+		position.setBounds(10, 58, 314, 36);
+		parametreBase.add(position);
+		position.setBorder(new LineBorder(Color.BLACK,1));
+		position.setBackground(Color.WHITE);
+		
+		JLabel lposition = new JLabel("Position:   ");
+		lposition.setBounds(10, 12, 66, 14);
+		
+		JLabel xnom = new JLabel("x");
+		xnom.setHorizontalAlignment(SwingConstants.RIGHT);
+		xnom.setBounds(61, 7, 28, 24);
+		
+		JLabel ynom = new JLabel("y");
+		ynom.setHorizontalAlignment(SwingConstants.RIGHT);
+		ynom.setBounds(153, 12, 17, 14);
+		
+		JLabel znom = new JLabel("z");
+		znom.setHorizontalAlignment(SwingConstants.RIGHT);
+		znom.setBounds(233, 12, 17, 14);
+		position.setLayout(null);
+		position.add(lposition);
 				
-						x.setPreferredSize(new Dimension(30, 30));	
-						y.setPreferredSize(new Dimension(30, 30));	
-						z.setPreferredSize(new Dimension(30, 30));
-						position.add(xnom);
-						position.add(x);
-						position.add(ynom);
-						position.add(y);
-						position.add(znom);
-						position.add(z);
+		x.setPreferredSize(new Dimension(30, 30));	
+		y.setPreferredSize(new Dimension(30, 30));	
+		z.setPreferredSize(new Dimension(30, 30));
+		position.add(xnom);
+		position.add(x);
+		position.add(ynom);
+		position.add(y);
+		position.add(znom);
+		position.add(z);
 						
-						JPanel panel_1 = new JPanel();
-						panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 3));
-						panel_1.setBackground(Color.WHITE);
-						panel_1.setBounds(371, 11, 355, 290);
-						getContentPane().add(panel_1);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new LineBorder(new Color(0, 0, 0), 3));
+		panel_1.setBackground(Color.WHITE);
+		panel_1.setBounds(371, 11, 355, 290);
+		getContentPane().add(panel_1);
 		
 		
     }	
@@ -428,17 +468,31 @@ private static final long serialVersionUID = 1L;
 		this.rayTracing = rayTracing;
 	    this.listeO=oL;
 	    this.grilleO=L;
-	    this.dimen = new JSpinner();
 	    
-	    this.x = new JSpinner();
-	    this.y = new JSpinner();
-	    this.z = new JSpinner();
+	    this.dimension = 0;
 	    
-		this.rouge = new JTextField();
-		this.vert = new JTextField();
-		this.bleu = new JTextField();
+	    this.x= 0.0;
+		this.y= 0.0;
+		this.z= 0.0;
+	    
+		this.r = 0;
+		this.b = 0;
+		this.v = 0;
 		
-		this.couleurChoisi = new JPanel();
+		this.iRR = 0.0;
+		this.iRL = 0.0;
+		this.eRR = 0.0;
+		this.eRL = 0.0;
+		this.indice = 0.0;
+		
+		this.onRL = false;
+		this.onRR = false;
+		
+		this.rouge = new JSpinner();
+		this.vert = new JSpinner();
+		this.bleu = new JSpinner();
+				
+		this.couleurChoisi = new JButton();
 
 	    this.ajouter = new JButton("Modifier");
 	    ajouter.addActionListener(new ActionModifierObjet());
@@ -460,39 +514,62 @@ private static final long serialVersionUID = 1L;
 		}
 	}
 	
-	private class ColorUpdater extends KeyAdapter {
-		JTextField red;
-		JTextField blue;
-		JTextField green;
-		JPanel couleur;
+	
+	class ProprieteDouble implements ChangeListener {
 		
-		public ColorUpdater(JTextField r,JTextField b,JTextField g, JPanel c) {
-			super();
-			red = r;
-			blue = b;
-			green = g;
-			couleur = c;
+		double update;
+		
+		public ProprieteDouble(double n) {
+			this.update = n;
 		}
-		public void keyReleased(KeyEvent e) {
-			String r = red.getText();
-			String g = blue.getText();
-			String b = green.getText();
-		    mycolor = new Color(Integer.parseInt(r), Integer.parseInt(g),Integer.parseInt(b));
-		    couleur.setBackground(mycolor);
-			
+		
+		public void stateChanged(ChangeEvent event) {
+			JSpinner valeur = (JSpinner) event.getSource();
+			this.update = (double)valeur.getValue();
 		}
 	}
 	
-	private class ActionCouleur implements ActionListener {
+	class Rouge implements ChangeListener {
+
+		public void stateChanged(ChangeEvent event) {
+			JSpinner valeur = (JSpinner) event.getSource();
+			r = (int)valeur.getValue();
+			mycolor = new Color(r,v,b);
+			couleurChoisi.setBackground(mycolor);
+		}
+	}
+	
+	class Vert implements ChangeListener {
+
+		public void stateChanged(ChangeEvent event) {
+			JSpinner valeur = (JSpinner) event.getSource();
+			v = (int)valeur.getValue();
+			mycolor = new Color(r,v,b);
+			couleurChoisi.setBackground(mycolor);
+		}
+	}
+	
+	class Bleu implements ChangeListener {
+
+		public void stateChanged(ChangeEvent event) {
+			JSpinner valeur = (JSpinner) event.getSource();
+			b = (int)valeur.getValue();
+			mycolor = new Color(r,v,b);
+			couleurChoisi.setBackground(mycolor);
+		}
+	}
+
+	
+	private class ActionChoisirCouleur implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			mycolor = JColorChooser.showDialog(jf,"Swing color chooser", null);
 			if (mycolor != null) {
 				int r = mycolor.getRed();
 				int g = mycolor.getGreen();
 				int b = mycolor.getBlue();
-				rouge.setText(String.valueOf(r));
-				vert.setText(String.valueOf(g));
-				bleu.setText(String.valueOf(b));
+				rouge.setValue(Integer.valueOf(r));
+				vert.setValue(Integer.valueOf(g));
+				bleu.setValue(Integer.valueOf(b));
 				couleurChoisi.setBackground(mycolor);
 			}
 			
