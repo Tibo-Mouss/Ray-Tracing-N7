@@ -75,8 +75,7 @@ public class SceneMedium2 {
 		raytracing.lancerRayTracing();
 		
 		// Enregistrement de l'image
-		BufferedImage img = camera.creerImage();
-		camera.sauvegarderImage(img, "test2");
+		camera.sauvegarderImage("test2");
 
 		
 	} catch (Exception e) {

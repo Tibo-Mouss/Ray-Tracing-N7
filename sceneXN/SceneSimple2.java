@@ -47,7 +47,7 @@ public class SceneSimple2 {
 		raytracing.lancerRayTracing();
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
-		camera.sauvegarderImage(img, "test_simple3");
+		camera.sauvegarderImage("test_simple3");
 		System.out.println("Traitement d'image fini !");
 		
 	} catch (Exception e) {

@@ -23,11 +23,11 @@ public class SceneMedium3 {
 	public static void main(String args[]) {
 		
 	try {
-		// Création de la scène
+		// CrÃ©ation de la scÃ¨ne
 	    Scene scene = new Scene(3000);
 	    scene.setCouleur(Color.white);
 	    
-	    	// Ajout d'une sphère
+	    	// Ajout d'une sphÃ¨re
 	    Sphere sphere1 = new Sphere(new Point(5,0,5), 2.5, "Sphere1");
 	    Couleur couleur1 = (Couleur)sphere1.getMateriau(0);
 	    couleur1.set(255, 255, 255); // Blanc
@@ -38,7 +38,7 @@ public class SceneMedium3 {
 	    sphere1.getMateriau().setEnergieReflexion(1);
 	    scene.addObjet3D(sphere1);
 	    
-	    	// Ajout d'une sphère
+	    	// Ajout d'une sphÃ¨re
 	    Sphere sphere2 = new Sphere(new Point(5,7,5), 2.5, "Sphere2");
 	    Couleur couleur2 = (Couleur)sphere2.getMateriau(0);
 	    couleur2.set(255, 0, 0); // Rouge
@@ -49,7 +49,7 @@ public class SceneMedium3 {
 	    sphere2.getMateriau().setEnergieReflexion(1);
 	    scene.addObjet3D(sphere2);
 	    
-	 		// Ajout d'une sphère
+	 		// Ajout d'une sphÃ¨re
 	    Sphere sphere3 = new Sphere(new Point(-5,5,5), 2.5, "Sphere3");
 	    Couleur couleur3 = (Couleur)sphere3.getMateriau(0);
 	    couleur3.set(0, 255, 0); // Verte
@@ -61,7 +61,7 @@ public class SceneMedium3 {
 	    scene.addObjet3D(sphere3);
 
 	    
-			// Ajout d'une sphère
+			// Ajout d'une sphÃ¨re
 	    Sphere sphere4 = new Sphere(new Point(12,7,5), 2.5, "Sphere4");
 	    Couleur couleur4 = (Couleur)sphere4.getMateriau(0);
 	    couleur4.set(0, 0, 255); // Bleue
@@ -79,22 +79,22 @@ public class SceneMedium3 {
 	    //reflectivite5.setOn(true);
 	    scene.addObjet3D(plan);
 	    
-	    	// Ajout d'une lumière
+	    	// Ajout d'une lumiÃ¨re
 	    Lumiere lumiere1 = new LumierePonctuelle(new Point(5,10,15),new Color(255,0,0)); // Rouge
 	    // scene.addLumiere(lumiere1);
 	    
-			// Ajout d'une lumière
+			// Ajout d'une lumiÃ¨re
 	    Lumiere lumiere2 = new LumierePonctuelle(new Point(50,50,50),new Color(0,0,255)); // Bleue
 	    scene.addLumiere(lumiere2);
 	    
-		// Ajout d'une lumière
+		// Ajout d'une lumiÃ¨re
 	    Lumiere lumiere3 = new LumierePonctuelle(new Point(50,-50,50),new Color(0,255,0)); // Bleue
 	    scene.addLumiere(lumiere3);
 	    
-		// Ajout d'une lumière
+		// Ajout d'une lumiÃ¨re
 	    Lumiere lumiere4 = new LumierePonctuelle(new Point(50,0,5),new Color(255,0,0)); // Bleue
 	    scene.addLumiere(lumiere4);
-	    // Pour obtenir des ombres diffuses, il faut ajouter des sources de lumière proches
+	    // Pour obtenir des ombres diffuses, il faut ajouter des sources de lumiÃ¨re proches
 	    /* for (int i = -5; i <= 5; i += 5) {
 	    	for (int j = -5; j <= 5; j += 5) {
 	    		for (int k = -5; k <= 5; k += 5) {
@@ -104,7 +104,7 @@ public class SceneMedium3 {
 	    	}
 	    } */
 	    
-	    // Création de la caméra
+	    // CrÃ©ation de la camÃ©ra
 	    Camera camera = new Camera(new Point(50,0,5),new Vecteur(-10,0,0),1000,1000,new Vecteur(0,0,2)); //vHaut = (0,0,10) sur l'exemple geogebra
 		
 	    // Lancement du ray tracing
@@ -117,7 +117,7 @@ public class SceneMedium3 {
 		camera.printCoinsFenetre();
 		camera.printCoinsImage();
 	} catch (Exception e) {
-		System.out.println("Erreur dans la gestion de la scène.");
+		System.out.println("Erreur dans la gestion de la scÃ¨ne.");
 	}
 	}
 }

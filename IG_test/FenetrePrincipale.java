@@ -23,21 +23,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import IG.EnregistrerImage;
-import IG.EnregistrerScene;
-import IG.FenetreLumiere;
-import IG.ListeLumieres;
-import IG.ListeObjets;
-import IG.Lumieres;
-import IG.Objet;
-import IG.FenetrePrincipale.ActionAjouterLumiere;
-import IG.FenetrePrincipale.ActionAjouterObjet;
-import IG.FenetrePrincipale.ActionEnregistrerI;
-import IG.FenetrePrincipale.ActionEnregistrerS;
-import IG.FenetrePrincipale.ActionOuvrirLumiere;
-import elements3D.Sphere;
+
+import elements3D.*;
+import rayTracing.Camera;
 import rayTracing.RayTracing;
+import rayTracing.Scene;
 import utilitaire.Point;
+import utilitaire.Vecteur;
+
 import javax.swing.JScrollBar;
 import javax.swing.ScrollPaneConstants;
 import java.awt.Component;
@@ -62,13 +55,20 @@ public class FenetrePrincipale {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FenetrePrincipale window = new FenetrePrincipale(null);
+					Scene scene = new Scene(300);
+					Camera camera = new Camera(new Point(20,0,5),new Vecteur(-10,0,0),1000,1000,new Vecteur(0,0,10)); //vHaut = (0,0,10) sur l'exemple geogebra
+					RayTracing raytracing = new RayTracing(scene, camera, 10, true, true);
+					FenetrePrincipale window = new FenetrePrincipale(raytracing);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	
+	public void lancerFenetre() {
+		this.frame.setVisible(true);
 	}
 
 	/**
@@ -77,7 +77,9 @@ public class FenetrePrincipale {
 	public FenetrePrincipale(RayTracing nrt) {
 		this.rayTracing = nrt;
 		this.listeO = new ListeObjets();
+		listeO.initialiser(rayTracing.getScene().getObjet3D());
 		this.listeL = new ListeLumieres();
+		listeL.initialiser(rayTracing.getScene().getLumiere());
 		this.imageRT = new JLabel("");
 		initialize();
 	}
@@ -247,6 +249,7 @@ public class FenetrePrincipale {
 		frame.getContentPane().add(btnEnregistrerI);
 		
 		JButton lancerRT = new JButton("Lancer RayTracing");
+		lancerRT.addActionListener(new ActionLancerCalcul());
 		lancerRT.setBackground(new Color(0, 128, 128));
 		lancerRT.setBounds(10, 584, 200, 23);
 		frame.getContentPane().add(lancerRT);
@@ -290,7 +293,7 @@ public class FenetrePrincipale {
 	public class ActionEnregistrerS implements ActionListener {
 		
 		public void actionPerformed(ActionEvent ev) {
-			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scï¿½ne", rayTracing);
+			EnregistrerScene enregistrer = new EnregistrerScene( "Enregistrer Scène", rayTracing);
 			enregistrer.setVisible(true);
 			
 		}
@@ -299,9 +302,9 @@ public class FenetrePrincipale {
 	public class ActionLancerCalcul implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
 			rayTracing.lancerRayTracing();
-			System.out.printf("Calcul lancï¿½ ...\n");
+			System.out.printf("Calcul lancé ...\n");
 			imageRT.setIcon(new ImageIcon(rayTracing.getCamera().creerImage()));
-			System.out.printf("Calcul Terminï¿½ \n");
+			System.out.printf("Calcul Terminé \n");
 		}
 	}
 	
@@ -321,7 +324,7 @@ public class FenetrePrincipale {
 	
 	public class ActionParametrer implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
-			Parametrage parametre = new Parametrage();
+			Parametrage parametre = new Parametrage(rayTracing);
 			parametre.setVisible(true);
 		}
 	}
