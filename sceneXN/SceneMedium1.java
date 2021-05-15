@@ -49,7 +49,7 @@ public class SceneMedium1 {
 			
 			// Enregistrement de l'image
 			BufferedImage img = camera.creerImage();
-			camera.sauvegarderImage(img, "test1");
+			camera.sauvegarderImage("test1");
 		} catch (Exception e) {
 			System.out.println("Erreur dans la gestion de la scène.");
 		}

@@ -90,8 +90,8 @@ public class SceneMedium3 {
 		raytracing.lancerRayTracing();
 		
 		// Enregistrement de l'image
-		BufferedImage img = camera.creerImage();
-		camera.sauvegarderImage(img, "test3bis");
+		
+		camera.sauvegarderImage("test3bis");
 	} catch (Exception e) {
 		System.out.println("Erreur dans la gestion de la scène.");
 	}

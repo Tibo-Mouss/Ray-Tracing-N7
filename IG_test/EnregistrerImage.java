@@ -3,6 +3,8 @@ import rayTracing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import exception.SauvegarderFichierException;
+
 /** 
  * Classe permettant l'entregistrement de l'image.
  * Elle hérite de la classe FenetreEnregistrer que nous avons défini.
@@ -33,7 +35,11 @@ public class EnregistrerImage extends FenetreEnregistrer {
 	 */
 	public class ActionEnregistrer implements ActionListener {
 		public void actionPerformed (ActionEvent ev) {
-			rt.getCamera().sauvegarderImage(text.getText());
+			try {
+				rt.getCamera().sauvegarderImage(text.getText());
+			} catch (SauvegarderFichierException e) {
+				e.printStackTrace();
+			}
 			System.out.printf("Image sauvegardée \n");
 			dispose();
 		}

@@ -23,19 +23,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 
-import IG.EnregistrerImage;
-import IG.EnregistrerScene;
-import IG.FenetreLumiere;
-import IG.ListeLumieres;
-import IG.ListeObjets;
-import IG.Lumieres;
-import IG.Objet;
-import IG.FenetrePrincipale.ActionAjouterLumiere;
-import IG.FenetrePrincipale.ActionAjouterObjet;
-import IG.FenetrePrincipale.ActionEnregistrerI;
-import IG.FenetrePrincipale.ActionEnregistrerS;
-import IG.FenetrePrincipale.ActionOuvrirLumiere;
-import elements3D.Sphere;
+
+import elements3D.*;
 import rayTracing.RayTracing;
 import utilitaire.Point;
 import javax.swing.JScrollBar;
@@ -77,7 +66,9 @@ public class FenetrePrincipale {
 	public FenetrePrincipale(RayTracing nrt) {
 		this.rayTracing = nrt;
 		this.listeO = new ListeObjets();
+		listeO.initialiser(rayTracing.getScene().getObjet3D());
 		this.listeL = new ListeLumieres();
+		listeL.initialiser(rayTracing.getScene().getLumiere());
 		this.imageRT = new JLabel("");
 		initialize();
 	}

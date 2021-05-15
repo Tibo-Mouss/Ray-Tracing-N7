@@ -276,7 +276,7 @@ public class Camera {
 	 * @param nom Nom de l'image.
 	 * @throws SauvegarderFichierException 
 	 */
-	public void sauvegarderImage(BufferedImage img,String nom) throws SauvegarderFichierException {		
+	public void sauvegarderImage(String nom) throws SauvegarderFichierException {		
 		if (nom.isEmpty()) {
 			throw new SauvegarderFichierException("Nom invalide, il faut au moins un charactère");
 		}
@@ -287,7 +287,7 @@ public class Camera {
 		//Sauvegarde de l'image creee
 	     try{
 	       f = new File(".\\"+nom+".png");
-	       ImageIO.write(img, "png", f);
+	       ImageIO.write(creerImage(), "png", f);
 	     }catch(IOException e){
 	       System.out.println("Error: " + e);
 	     }

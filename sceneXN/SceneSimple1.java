@@ -56,8 +56,7 @@ public class SceneSimple1 {
 		
 		
 		// Enregistrement de l'image
-		BufferedImage img = camera.creerImage();
-		camera.sauvegarderImage(img, "test_simple1");
+		camera.sauvegarderImage("test_simple1");
 		System.out.println("Rendu d'image termine");		
 	}
 }

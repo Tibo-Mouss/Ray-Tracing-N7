@@ -49,7 +49,7 @@ public class SceneSimple3 {
 		
 		// Enregistrement de l'image
 		BufferedImage img = camera.creerImage();
-		camera.sauvegarderImage(img, "test_simple3");
+		camera.sauvegarderImage("test_simple3");
 		} catch (Exception e) {
 			System.out.println("Erreur dans la gestion de la scène");
 		}
