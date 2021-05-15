@@ -29,6 +29,7 @@ public class Parametrage extends JFrame{
 	public static void main(String[] args) {
 		try {
 			Parametrage dialog = new Parametrage();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,8 +40,7 @@ public class Parametrage extends JFrame{
 	 * Create the dialog.
 	 */
 	public Parametrage() {
-		setBounds(100, 100, 372, 179);			
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setBounds(100, 100, 372, 179);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

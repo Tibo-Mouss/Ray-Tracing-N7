@@ -61,8 +61,8 @@ public class FenetreObjet extends JFrame {
 				//raytracing.getScene().addObjet(objet);
 			//} catch (Objet3DHorsSceneException e) {
 		    	//int n = JOptionPane.showOptionDialog(new JFrame(),
-		    		//"Attention ! L'objet que vous voulez ajouter est hors scène.\n Voulez-vous toujours l'ajouter ? ",
-		    	    //"Lumière hors scène  ",
+		    		//"Attention ! L'objet que vous voulez ajouter est hors scï¿½ne.\n Voulez-vous toujours l'ajouter ? ",
+		    	    //"Lumiï¿½re hors scï¿½ne  ",
 		    	    //JOptionPane.WARNING_MESSAGE, 
 		    	    //JOptionPane.YES_NO_OPTION,
 		    	    //null,    
