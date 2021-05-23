@@ -17,13 +17,14 @@ public class TestCylindre {
 	// précision pour les comparaisons entre reels
 	public final static double EPSILON = 0.001;
 	
-    private Cylindre cyl1, cyl2;
+    private Cylindre cyl1, cyl2 ,cyl3;
     private double x, y, z;
     
 	@Before
 	public void setUp() {
 		cyl1 = new Cylindre(new Point(0.0, 0.0, 0.0), 3.0, 5.0, new Vecteur(0,0,1),  "cyl1");
 		cyl2 = new Cylindre(new Point(1.0, 0.0, 1.0), 5.0, 5.0, new Vecteur(2,0,1), "cyl2");
+		cyl3 = new Cylindre(new Point(1.0, -2.0, 1.0), 3.0, 5.0, new Vecteur(0,0,2), "cyl3");
 	}
 	
 	@Test
@@ -81,8 +82,18 @@ public class TestCylindre {
 	}
 	
 	@Test
-	public void testGetNormal() {
+	public void testGetNormal1() {
 		Point impact = new Point(3.0, 0.0, 0.0);
+		Vecteur normal = cyl1.getNormal(impact, null);
+		// vérifie que le vecteur est vertical:
+		assertEquals("Coordonnée selon x de la normal est fausse", normal.getX(), 0.0, TestCylindre.EPSILON);
+		assertEquals("Coordonnée selon y de la normal est fausse", normal.getY(), 0.0, TestCylindre.EPSILON);
+		assertEquals("Coordonnée selon z de la normal est fausse", normal.getZ(), -1.0, TestCylindre.EPSILON);
+	}
+
+	@Test
+	public void testGetNormal2() {
+		Point impact = new Point(3.0, 0.0, 1.0);
 		Vecteur normal = cyl1.getNormal(impact, null);
 		// vérifie que le vecteur est vertical:
 		assertEquals("Coordonnée selon x de la normal est fausse", normal.getX(), 3.0, TestCylindre.EPSILON);
@@ -90,6 +101,7 @@ public class TestCylindre {
 		assertEquals("Coordonnée selon z de la normal est fausse", normal.getZ(), 0.0, TestCylindre.EPSILON);
 	}
 
+	
 	@Test
 	public void testEstTraversePar1() {
 		Vecteur dir = new Vecteur(0.0, -1.0, 0.0);
@@ -124,8 +136,24 @@ public class TestCylindre {
 	
 	@Test
 	public void testEstTraversePar3() {
-		Vecteur dir = new Vecteur(5.0, -10.0, -1.0);
-		Point origine = new Point(1.0, 8.0, 3.0);
+		Vecteur dir = new Vecteur(-1, -3.0, -2.0);
+		Point origine = new Point(3.0, 7.0, 9.0);
+		Rayon lum = new Rayon(dir, origine);
+		
+		Point impact = cyl3.estTraversePar(lum);
+		// l'impact devrait être en (2.54, 4.93, 2.23):
+		x = impact.getX();
+		y = impact.getY();
+		z = impact.getZ();
+		assertEquals("Coord. selon x mauvaise", x, 1.0, TestCylindre.EPSILON);
+		assertEquals("Coord. selon y mauvaise", y, 1.0, TestCylindre.EPSILON);
+		assertEquals("Coord. selon z mauvaise", z, 5.0, TestCylindre.EPSILON);
+	}
+	
+	@Test
+	public void testEstTraversePar4() {
+		Vecteur dir = new Vecteur(-1, -3.0, -2.0);
+		Point origine = new Point(3.0, 7.0, 9.0);
 		Rayon lum = new Rayon(dir, origine);
 		
 		Point impact = cyl2.estTraversePar(lum);
@@ -133,13 +161,13 @@ public class TestCylindre {
 		x = impact.getX();
 		y = impact.getY();
 		z = impact.getZ();
-		assertEquals("Coord. selon x mauvaise", x, 2.54, TestCylindre.EPSILON);
-		assertEquals("Coord. selon y mauvaise", y, 4.93, TestCylindre.EPSILON);
-		assertEquals("Coord. selon z mauvaise", z, 2.23, TestCylindre.EPSILON);
+		assertEquals("Coord. selon x mauvaise", x, 1.526, TestCylindre.EPSILON);
+		assertEquals("Coord. selon y mauvaise", y, 2.578, TestCylindre.EPSILON);
+		assertEquals("Coord. selon z mauvaise", z, 6.052, TestCylindre.EPSILON);
 	}
 	
 	
-	@Test
+	
 	public void testGetSelfOmbre() {
 		Point impact;
 		Point origineLum = new Point(-4.0, 0.0, 3.0);
