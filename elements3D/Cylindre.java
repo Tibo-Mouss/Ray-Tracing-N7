@@ -101,11 +101,13 @@ public class Cylindre implements Objet3D, Serializable {
 		double h = this.getHauteur() ;
 		// et va le vecteur de direction du cylindre 
 		Vecteur va = this.getVectdir();
+		va.normaliser();
 		
 		//obtenir le point du haut du cylindre : le centre de la deuxieme base 
 		Point som = new Point(va.multiplication(h/va.module()).getX(),va.multiplication(h/va.module()).getY(),va.multiplication(h/va.module()).getZ());
 		Point p2 = pa.sommer(som);
 		
+
 		//deltap : delp = p-pa
 		Vecteur delp = new Vecteur(pa,p);
 		
@@ -118,7 +120,6 @@ public class Cylindre implements Objet3D, Serializable {
 		double c = Math.pow(delp.soustraire(va.multiplication(delp.produitScalaire(va))).module(),2) - this.rbase*this.rbase;
 		
 		double delta = b * b - 4 * a * c;
-		System.out.println("delta = "+delta);
 		if (delta >= 0.0) {
 			// cas 2 racines ou 1 racine double:
 			double t1 = (-b + Math.sqrt(delta)) / (2.0 * a);
@@ -253,6 +254,8 @@ public class Cylindre implements Objet3D, Serializable {
 		//obtenir le point du haut du cylindre : le centre de la deuxiele base 
 		Point som = new Point(va.multiplication(h/va.module()).getX(),va.multiplication(h/va.module()).getY(),va.multiplication(h/va.module()).getZ());
 		Point p2 = pa.sommer(som);
+		
+
 		double distance1 = Math.pow(this.getOriginebase().distance(impact), 2)-Math.pow(this.getRayonbase(), 2);
 		double distance2 = Math.pow(p2.distance(impact), 2)-Math.pow(this.getRayonbase(), 2);
 		double distance;
@@ -269,8 +272,10 @@ public class Cylindre implements Objet3D, Serializable {
 				return va;
 			}
 		}
+		// calcul du vecteur normal à la surface verticale du cylindre 
 		Point p = new Point(impact.getX(),impact.getY(),impact.getZ());
-		p.translater(this.getVectdir().multiplication(distance/this.getVectdir().module()));
+		p.translater(this.getVectdir().multiplication(-distance/this.getVectdir().module()));
+		
 		return new Vecteur(this.getOriginebase(),p);
 	}
 	
